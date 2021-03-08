@@ -13,7 +13,7 @@ type Monster struct {
 	ID          string
 	Name        string
 	Description string
-	HP          *Stat
+	HP          int
 	Stats       Stats
 	Equipment   Equipment
 }
@@ -24,21 +24,21 @@ func (monster Monster) String() string {
 
 // LoadGoblin creates a default goblin
 func LoadGoblin() Monster {
-	jsonFile, err := os.Open("./characters/monsters/monster-goblin.json")
+	jsonFile, err := os.Open("./characters/monsters/monsters.json")
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer jsonFile.Close()
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-	var goblin Monster
-	json.Unmarshal(byteValue, &goblin)
-	return goblin
+	var monsters map[string]Monster
+	json.Unmarshal(byteValue, &monsters)
+	return monsters["monster-goblin"]
 }
 
 // Stat retrieves the current stat value
 func (monster *Monster) Stat(statID string) int {
-	if stat, ok := monster.Stats["stat-"+statID]; ok {
-		return stat.Value
+	if stat, ok := monster.Stats[statID]; ok {
+		return stat
 	}
 
 	log.Printf("cannot retrieve to unknown stat '%v'", statID)

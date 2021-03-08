@@ -1,0 +1,35 @@
+{
+    "monster-goblin": {
+        "id": "monster-goblin",
+        "name": "Goblin",
+        "description": "a gross little gobline",
+        "hp": 10,
+        "stats": {
+            "atk": 5,
+            "def": 1,
+            "exp": 2
+        }
+    },
+    "monster-frog": {
+        "id": "monster-frog",
+        "name": "Giant Frog",
+        "description": "an oversized frog",
+        "hp": 8,
+        "stats": {
+            "atk": 6,
+            "def": 6,
+            "exp": 4
+        }
+    },
+    "monster-troll": {
+        "id": "monster-troll",
+        "name": "Troll",
+        "description": "a fearsome troll",
+        "hp": 20,
+        "stats": {
+            "atk": 7,
+            "def": 5,
+            "exp": 5
+        }
+    }
+}

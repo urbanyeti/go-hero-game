@@ -18,12 +18,12 @@ func (stat Stat) String() string {
 }
 
 // Stats is a collection of Stat objects
-type Stats map[string]*Stat
+type Stats map[string]int
 
 func (stats Stats) String() string {
 	var sb strings.Builder
-	for _, stat := range stats {
-		sb.WriteString(stat.String())
+	for key, stat := range stats {
+		sb.WriteString(fmt.Sprintf("(%v: %v)", key, stat))
 	}
 	return fmt.Sprintf("Stats: {%v}", sb.String())
 }

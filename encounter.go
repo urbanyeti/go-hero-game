@@ -23,26 +23,28 @@ func (encounter CombatEncounter) Start(hero *characters.Hero) error {
 	fmt.Printf("  - Combat: A wild %v appears!\n", monster.Name)
 
 	playersMove := true
-	for i := 1; hero.HP.Value > 0 && monster.HP.Value > 0; i++ {
-		heroAtk := hero.Stat("atk")
+	for i := 1; hero.HP > 0 && monster.HP > 0; i++ {
+		heroAtk := hero.Stat("atk") + hero.Stat("lvl") + rand.Intn(hero.Stat("atk")) - (hero.Stat("atk") / 2)
 		heroDef := hero.Stat("def")
 		monsterAtk := monster.Stat("atk")
 		monsterDef := monster.Stat("def")
-		heroDamage := maxOf(heroAtk-monsterDef, 0)
+		heroDamage := maxOf(heroAtk, 0)
 		monsterDamage := maxOf(monsterAtk-heroDef, 0)
 
 		if playersMove {
-			fmt.Printf("    - Round %v: %v deals %v DMG! (%v ATK - %v DEF)\n", i, hero.Name, heroDamage, heroAtk, monsterDef)
-			monster.HP.Value -= heroDamage
+			fmt.Printf("    - Round %v: %v deals %v DMG! (%v DMG - %v DEF)\n", i, hero.Name, heroDamage, heroAtk, monsterDef)
+			monster.HP -= heroDamage
 
 		} else {
-			fmt.Printf("    - Round %v: %v deals %v DMG! (%v ATK - %v DEF)\n", i, monster.Name, monsterDamage, monsterAtk, heroDef)
-			hero.HP.Value -= monsterDamage
+			fmt.Printf("    - Round %v: %v deals %v DMG! (%v DMG - %v DEF)\n", i, monster.Name, monsterDamage, monsterAtk, heroDef)
+			hero.HP -= monsterDamage
 		}
 		fmt.Printf("      %v: %v | %v: %v\n", hero.Name, hero.HP, monster.Name, monster.HP)
 		playersMove = !playersMove
 		time.Sleep(1 * time.Second)
 	}
+	fmt.Printf("    %v slays the %v!\n", hero.Name, monster.Name)
+	hero.GainExp(monster.Stat("exp"))
 
 	return nil
 }
@@ -63,14 +65,14 @@ func (encounter CutsceneEncounter) Start(hero *characters.Hero) error {
 		hero.AddStat("def", 2)
 	case 2:
 		fmt.Printf("%v gains %v HP", hero.Name, 2)
-		hero.HP.Value += 2
+		hero.HP += 2
 	case 3:
 		hero.AddStat("atk", -2)
 	case 4:
 		hero.AddStat("def", -2)
 	case 5:
 		fmt.Printf("%v loses %v HP", hero.Name, 2)
-		hero.HP.Value -= 2
+		hero.HP -= 2
 	}
 	fmt.Println()
 	return nil
