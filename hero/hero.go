@@ -2,6 +2,7 @@ package hero
 
 import (
 	"fmt"
+	"log"
 	"strings"
 )
 
@@ -109,5 +110,9 @@ func (hero *Hero) SetDefaultEquipment() {
 
 // AddStat adds to the specified Stat value
 func (hero *Hero) AddStat(statID string, value int) {
-	hero.Stats["stat-"+statID].Value += value
+	if stat, ok := hero.Stats["stat-"+statID]; ok {
+		stat.Value += value
+	} else {
+		log.Printf("cannot add to unknown stat '%v'", statID)
+	}
 }
