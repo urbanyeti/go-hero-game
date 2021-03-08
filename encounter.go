@@ -8,13 +8,16 @@ import (
 	"github.com/urbanyeti/go-hero-game/characters"
 )
 
+// An Encounter can be started each turn
 type Encounter interface {
 	Start(hero *characters.Hero) error
 }
 
+// A CombatEncounter consists of a fight with a monster
 type CombatEncounter struct {
 }
 
+// Start the fight
 func (encounter CombatEncounter) Start(hero *characters.Hero) error {
 	monster := characters.LoadGoblin()
 	fmt.Printf("  - Combat: A wild %v appears!\n", monster.Name)
@@ -25,8 +28,8 @@ func (encounter CombatEncounter) Start(hero *characters.Hero) error {
 		heroDef := hero.Stat("def")
 		monsterAtk := monster.Stat("atk")
 		monsterDef := monster.Stat("def")
-		heroDamage := MaxOf(heroAtk-monsterDef, 0)
-		monsterDamage := MaxOf(monsterAtk-heroDef, 0)
+		heroDamage := maxOf(heroAtk-monsterDef, 0)
+		monsterDamage := maxOf(monsterAtk-heroDef, 0)
 
 		if playersMove {
 			fmt.Printf("    - Round %v: %v deals %v DMG! (%v ATK - %v DEF)\n", i, hero.Name, heroDamage, heroAtk, monsterDef)
@@ -44,10 +47,12 @@ func (encounter CombatEncounter) Start(hero *characters.Hero) error {
 	return nil
 }
 
+// A CutsceneEncounter consists of dialogue and stat changes
 type CutsceneEncounter struct {
 	Description string
 }
 
+// Start the CutsceneEncounter
 func (encounter CutsceneEncounter) Start(hero *characters.Hero) error {
 	fmt.Printf("  - Cutscene: %v\n    - ", encounter.Description)
 	event := rand.Intn(6)
@@ -71,7 +76,7 @@ func (encounter CutsceneEncounter) Start(hero *characters.Hero) error {
 	return nil
 }
 
-func MaxOf(vars ...int) int {
+func maxOf(vars ...int) int {
 	max := vars[0]
 
 	for _, i := range vars {
