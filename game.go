@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/urbanyeti/go-hero-game/hero"
+	"github.com/urbanyeti/go-hero-game/characters"
 )
 
 type game struct {
-	hero *hero.Hero
-	loop int
-	turn int
+	hero       *characters.Hero
+	loop       int
+	turn       int
+	encounters []Encounter
 }
 
 func (game game) String() string {
@@ -20,9 +21,17 @@ func (game game) String() string {
 func (game *game) Init() {
 	game.loop = 1
 	game.turn = 1
-	game.hero = &hero.Hero{ID: "hero-dan", Name: "Dan", Description: "a cool hero"}
+	game.hero = &characters.Hero{ID: "hero-dan", Name: "Dan", Description: "a cool hero"}
 	game.hero.SetDefaultStats()
 	game.hero.SetDefaultEquipment()
+	game.encounters = []Encounter{
+		CombatEncounter{},
+		CombatEncounter{},
+		CutsceneEncounter{"A sppooky encounter..."},
+		CutsceneEncounter{"A magical gift!"},
+		CutsceneEncounter{"A random act of chaos"},
+	}
+
 }
 
 func (game *game) NextTurn() {
@@ -33,20 +42,8 @@ func (game *game) NextTurn() {
 		game.turn = 1
 	}
 
-	event := rand.Intn(6)
-	switch event {
-	case 0:
-		game.hero.AddStat("atk", 2)
-	case 1:
-		game.hero.AddStat("def", 2)
-	case 2:
-		game.hero.HP.Value += 2
-	case 3:
-		game.hero.AddStat("atk", -2)
-	case 4:
-		game.hero.AddStat("def", -2)
-	case 5:
-		game.hero.HP.Value -= 2
-	}
+	event := rand.Intn(5)
+	game.encounters[event].Start(game.hero)
+	fmt.Println()
 	fmt.Println(game)
 }

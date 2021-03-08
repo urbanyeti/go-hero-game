@@ -1,4 +1,4 @@
-package hero
+package characters
 
 import (
 	"fmt"
@@ -23,7 +23,6 @@ func (hero Hero) String() string {
 func (hero *Hero) SetDefaultStats() {
 	if hero.HP == nil {
 		hero.HP = &Stat{
-			ID:          "stat-hp",
 			Name:        "HP",
 			Description: "health points",
 			Value:       100}
@@ -32,12 +31,10 @@ func (hero *Hero) SetDefaultStats() {
 	if len(hero.Stats) == 0 {
 		hero.Stats = Stats{
 			"stat-atk": &Stat{
-				ID:          "stat-atk",
 				Name:        "ATK",
 				Description: "attack stat",
 				Value:       5},
 			"stat-def": &Stat{
-				ID:          "stat-def",
 				Name:        "DEF",
 				Description: "defense stat",
 				Value:       5},
@@ -65,7 +62,23 @@ func (hero *Hero) SetDefaultEquipment() {
 func (hero *Hero) AddStat(statID string, value int) {
 	if stat, ok := hero.Stats["stat-"+statID]; ok {
 		stat.Value += value
+		if value > 0 {
+			fmt.Printf("%v gains %v %v", hero.Name, value, statID)
+		} else {
+			fmt.Printf("%v loses %v %v", hero.Name, value, statID)
+		}
+
 	} else {
 		log.Printf("cannot add to unknown stat '%v'", statID)
 	}
+}
+
+// Stat retrieves the current stat value
+func (hero *Hero) Stat(statID string) int {
+	if stat, ok := hero.Stats["stat-"+statID]; ok {
+		return stat.Value
+	}
+
+	log.Printf("cannot retrieve unknown stat '%v'", statID)
+	return 0
 }

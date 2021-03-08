@@ -1,4 +1,4 @@
-package hero
+package characters
 
 import (
 	"fmt"
@@ -8,7 +8,6 @@ import (
 // A Stat is a number assoicated with a Hero.
 // Stats can be increased, decreased, and checked.
 type Stat struct {
-	ID          string
 	Name        string
 	Description string
 	Value       int
