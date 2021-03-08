@@ -10,41 +10,42 @@ import (
 
 // An Encounter can be started each turn
 type Encounter interface {
-	Start(hero *characters.Hero) error
+	Start(game *Game) error
 }
 
 // A CombatEncounter consists of a fight with a monster
 type CombatEncounter struct {
+	Monster characters.Monster
 }
 
 // Start the fight
-func (encounter CombatEncounter) Start(hero *characters.Hero) error {
-	monster := characters.LoadGoblin()
-	fmt.Printf("  - Combat: A wild %v appears!\n", monster.Name)
+func (encounter CombatEncounter) Start(game *Game) error {
+	hero := game.Hero
+	fmt.Printf("  - Combat: A wild %v appears!\n", encounter.Monster.Name)
 
 	playersMove := true
-	for i := 1; hero.HP > 0 && monster.HP > 0; i++ {
+	for i := 1; hero.HP > 0 && encounter.Monster.HP > 0; i++ {
 		heroAtk := hero.Stat("atk") + hero.Stat("lvl") + rand.Intn(hero.Stat("atk")) - (hero.Stat("atk") / 2)
 		heroDef := hero.Stat("def")
-		monsterAtk := monster.Stat("atk")
-		monsterDef := monster.Stat("def")
+		monsterAtk := encounter.Monster.Stat("atk")
+		monsterDef := encounter.Monster.Stat("def")
 		heroDamage := maxOf(heroAtk, 0)
 		monsterDamage := maxOf(monsterAtk-heroDef, 0)
 
 		if playersMove {
 			fmt.Printf("    - Round %v: %v deals %v DMG! (%v DMG - %v DEF)\n", i, hero.Name, heroDamage, heroAtk, monsterDef)
-			monster.HP -= heroDamage
+			encounter.Monster.HP -= heroDamage
 
 		} else {
-			fmt.Printf("    - Round %v: %v deals %v DMG! (%v DMG - %v DEF)\n", i, monster.Name, monsterDamage, monsterAtk, heroDef)
+			fmt.Printf("    - Round %v: %v deals %v DMG! (%v DMG - %v DEF)\n", i, encounter.Monster.Name, monsterDamage, monsterAtk, heroDef)
 			hero.HP -= monsterDamage
 		}
-		fmt.Printf("      %v: %v | %v: %v\n", hero.Name, hero.HP, monster.Name, monster.HP)
+		fmt.Printf("      %v: %v | %v: %v\n", hero.Name, hero.HP, encounter.Monster.Name, encounter.Monster.HP)
 		playersMove = !playersMove
-		time.Sleep(1 * time.Second)
+		time.Sleep(messageDelay * time.Millisecond)
 	}
-	fmt.Printf("    %v slays the %v!\n", hero.Name, monster.Name)
-	hero.GainExp(monster.Stat("exp"))
+	fmt.Printf("    %v slays the %v!\n", hero.Name, encounter.Monster.Name)
+	hero.GainExp(encounter.Monster.Stat("exp"))
 
 	return nil
 }
@@ -55,7 +56,8 @@ type CutsceneEncounter struct {
 }
 
 // Start the CutsceneEncounter
-func (encounter CutsceneEncounter) Start(hero *characters.Hero) error {
+func (encounter CutsceneEncounter) Start(game *Game) error {
+	hero := game.Hero
 	fmt.Printf("  - Cutscene: %v\n    - ", encounter.Description)
 	event := rand.Intn(6)
 	switch event {
@@ -64,28 +66,17 @@ func (encounter CutsceneEncounter) Start(hero *characters.Hero) error {
 	case 1:
 		hero.AddStat("def", 2)
 	case 2:
-		fmt.Printf("%v gains %v HP", hero.Name, 2)
+		hero.AddStat("hp-max", 2)
 		hero.HP += 2
 	case 3:
 		hero.AddStat("atk", -2)
 	case 4:
 		hero.AddStat("def", -2)
 	case 5:
-		fmt.Printf("%v loses %v HP", hero.Name, 2)
-		hero.HP -= 2
+		hero.AddStat("hp-max", -2)
+		hero.HP = minOf(hero.HP, hero.Stat("hp-max"))
 	}
 	fmt.Println()
+	time.Sleep(messageDelay * time.Millisecond)
 	return nil
-}
-
-func maxOf(vars ...int) int {
-	max := vars[0]
-
-	for _, i := range vars {
-		if max < i {
-			max = i
-		}
-	}
-
-	return max
 }

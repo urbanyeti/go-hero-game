@@ -27,6 +27,7 @@ func (hero *Hero) SetDefaultStats() {
 
 	if len(hero.Stats) == 0 {
 		hero.Stats = Stats{
+			"hp-max":   100,
 			"atk":      5,
 			"def":      5,
 			"lvl":      1,
@@ -60,10 +61,10 @@ func (hero *Hero) GainExp(exp int) {
 	if totalExp >= hero.Stat("exp-next") {
 		hero.AddStat("lvl", totalExp/hero.Stat("exp-next"))
 		hero.SetStat("exp", totalExp%hero.Stat("exp-next"))
-		fmt.Printf(" (%v/%v)", hero.Stat("exp"), hero.Stat("exp-next"))
+		fmt.Printf(" | Level %v (%v/%v)", hero.Stat("lvl"), hero.Stat("exp"), hero.Stat("exp-next"))
 	} else {
 		hero.AddStat("exp", exp)
-		fmt.Printf(" (%v/%v)", hero.Stat("exp"), hero.Stat("exp-next"))
+		fmt.Printf(" | Level %v (%v/%v)", hero.Stat("lvl"), hero.Stat("exp"), hero.Stat("exp-next"))
 	}
 	fmt.Print("\n")
 }
@@ -71,7 +72,7 @@ func (hero *Hero) GainExp(exp int) {
 // AddStat adds to the specified Stat value
 func (hero *Hero) AddStat(statID string, value int) {
 	if stat, ok := hero.Stats[statID]; ok {
-		hero.Stats[statID] = stat + value
+		hero.Stats[statID] = maxOf(stat+value, 1)
 		if value > 0 {
 			fmt.Printf("%v gains %v %v", hero.Name, value, statID)
 		} else {
@@ -99,4 +100,28 @@ func (hero *Hero) Stat(statID string) int {
 
 	log.Printf("cannot retrieve unknown stat '%v'", statID)
 	return 0
+}
+
+func maxOf(vars ...int) int {
+	max := vars[0]
+
+	for _, i := range vars {
+		if max < i {
+			max = i
+		}
+	}
+
+	return max
+}
+
+func minOf(vars ...int) int {
+	min := vars[0]
+
+	for _, i := range vars {
+		if min > i {
+			min = i
+		}
+	}
+
+	return min
 }

@@ -1,20 +1,21 @@
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "fmt"
 
-const maxTurns int = 10
+const loopTurns int = 10
+const maxTurns int = 100
+const messageDelay = 0
+const turnDelay = 200
+const loopDelay = 1000
 
 func main() {
-	game := game{}
+	game := Game{}
 	game.Init()
 
-	fmt.Println(game)
-	time.Sleep(1 * time.Second)
-	for i := 0; i < 15; i++ {
-		game.NextTurn()
-		time.Sleep(1 * time.Second)
+	for i := 0; i < maxTurns; i++ {
+		game.PlayTurn()
 	}
+
+	fmt.Println("Finished game!")
+	fmt.Println(game.Hero)
 }

@@ -3,47 +3,80 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"time"
 
 	"github.com/urbanyeti/go-hero-game/characters"
 )
 
-type game struct {
-	hero       *characters.Hero
-	loop       int
-	turn       int
-	encounters []Encounter
+// Game contains state and data about the game session
+type Game struct {
+	Hero       *characters.Hero
+	Loop       int
+	Turn       int
+	Encounters []Encounter
+	Monsters   characters.Monsters
 }
 
-func (game game) String() string {
-	return fmt.Sprintf("Loop: %v Turn: %v | %v", game.loop, game.turn, game.hero)
+func (game Game) String() string {
+	return fmt.Sprintf("Loop: %v Turn: %v | %v", game.Loop, game.Turn, game.Hero)
 }
 
-func (game *game) Init() {
-	game.loop = 1
-	game.turn = 1
-	game.hero = &characters.Hero{ID: "hero-dan", Name: "Dan", Description: "a cool hero"}
-	game.hero.SetDefaultStats()
-	game.hero.SetDefaultEquipment()
-	game.encounters = []Encounter{
-		CombatEncounter{},
-		CombatEncounter{},
+// Init sets up the Game
+func (game *Game) Init() {
+	game.Loop = 1
+	game.Turn = 1
+	game.Hero = &characters.Hero{ID: "Hero-dan", Name: "Dan", Description: "a cool Hero"}
+	game.Hero.SetDefaultStats()
+	game.Hero.SetDefaultEquipment()
+	game.Monsters = characters.LoadMonsters()
+	game.Encounters = []Encounter{
 		CutsceneEncounter{"A sppooky encounter..."},
 		CutsceneEncounter{"A magical gift!"},
 		CutsceneEncounter{"A random act of chaos"},
 	}
 
+	for _, monster := range game.Monsters {
+		game.Encounters = append(game.Encounters, CombatEncounter{monster})
+	}
 }
 
-func (game *game) NextTurn() {
-	if game.turn < maxTurns {
-		game.turn++
+// PlayTurn plays out the next Game turn
+func (game *Game) PlayTurn() {
+	fmt.Println(game)
+	game.Encounters[rand.Intn(len(game.Encounters))].Start(game)
+	fmt.Println()
+	time.Sleep(turnDelay * time.Millisecond)
+	if game.Turn < loopTurns {
+		game.Turn++
 	} else {
-		game.loop++
-		game.turn = 1
+		fmt.Print("New Loop! Resting...\n\n")
+		game.Loop++
+		game.Turn = 1
+		game.Hero.HP = game.Hero.Stat("hp-max")
+		time.Sleep(loopDelay * time.Millisecond)
+	}
+}
+
+func maxOf(vars ...int) int {
+	max := vars[0]
+
+	for _, i := range vars {
+		if max < i {
+			max = i
+		}
 	}
 
-	event := rand.Intn(5)
-	game.encounters[event].Start(game.hero)
-	fmt.Println()
-	fmt.Println(game)
+	return max
+}
+
+func minOf(vars ...int) int {
+	min := vars[0]
+
+	for _, i := range vars {
+		if min > i {
+			min = i
+		}
+	}
+
+	return min
 }
