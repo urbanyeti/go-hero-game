@@ -25,20 +25,24 @@ func (encounter CombatEncounter) Start(game *Game) error {
 
 	playersMove := true
 	for i := 1; hero.HP > 0 && encounter.Monster.HP > 0; i++ {
-		heroAtk := hero.Stat("atk") + hero.Stat("lvl") + rand.Intn(hero.Stat("atk")) - (hero.Stat("atk") / 2)
+		heroAtk := hero.Stat("atk") + hero.Stat("lvl")
+		weaponDmg := 1
+		if weapon, ok := hero.Weapon(); ok {
+			weaponDmg = rand.Intn(weapon.Stat("dmg-min")+weapon.Stat("dmg-max")) + (weapon.Stat("dmg-min"))
+		}
 		heroDef := hero.Stat("def")
 		monsterAtk := encounter.Monster.Stat("atk")
 		monsterDef := encounter.Monster.Stat("def")
-		heroDamage := maxOf(heroAtk, 0)
-		monsterDamage := maxOf(monsterAtk-heroDef, 0)
+		heroDmg := maxOf(heroAtk+weaponDmg-monsterDef, 0)
+		monsterDmg := maxOf(monsterAtk-heroDef, 0)
 
 		if playersMove {
-			fmt.Printf("    - Round %v: %v deals %v DMG! (%v DMG - %v DEF)\n", i, hero.Name, heroDamage, heroAtk, monsterDef)
-			encounter.Monster.HP -= heroDamage
+			fmt.Printf("    - Round %v: %v deals %v DMG! (%v DMG - %v DEF)\n", i, hero.Name, heroDmg, heroAtk+weaponDmg, monsterDef)
+			encounter.Monster.HP -= heroDmg
 
 		} else {
-			fmt.Printf("    - Round %v: %v deals %v DMG! (%v DMG - %v DEF)\n", i, encounter.Monster.Name, monsterDamage, monsterAtk, heroDef)
-			hero.HP -= monsterDamage
+			fmt.Printf("    - Round %v: %v deals %v DMG! (%v DMG - %v DEF)\n", i, encounter.Monster.Name, monsterDmg, monsterAtk, heroDef)
+			hero.HP -= monsterDmg
 		}
 		fmt.Printf("      %v: %v | %v: %v\n", hero.Name, hero.HP, encounter.Monster.Name, encounter.Monster.HP)
 		playersMove = !playersMove
