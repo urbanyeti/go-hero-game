@@ -26,14 +26,14 @@ func (monster Monster) String() string {
 type Monsters map[string]Monster
 
 // LoadMonsters grabs all the monster data from json
-func LoadMonsters() map[string]Monster {
-	jsonFile, err := os.Open("./characters/monsters/monsters.json")
+func LoadMonsters() Monsters {
+	jsonFile, err := os.Open("./characters/json/monsters.json")
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer jsonFile.Close()
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-	var monsters map[string]Monster
+	var monsters Monsters
 	json.Unmarshal(byteValue, &monsters)
 	return monsters
 }

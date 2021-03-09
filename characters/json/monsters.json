@@ -2,7 +2,7 @@
     "monster-goblin": {
         "id": "monster-goblin",
         "name": "Goblin",
-        "description": "a gross little gobline",
+        "description": "a gross little goblin",
         "hp": 10,
         "stats": {
             "atk": 5,

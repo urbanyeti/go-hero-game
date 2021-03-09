@@ -30,25 +30,10 @@ func (hero *Hero) SetDefaultStats() {
 			"hp-max":   100,
 			"atk":      5,
 			"def":      5,
+			"eva":      0,
 			"lvl":      1,
 			"exp":      0,
 			"exp-next": 10,
-		}
-	}
-}
-
-// SetDefaultEquipment initializes the default equipment for the hero
-func (hero *Hero) SetDefaultEquipment() {
-	if len(hero.Equipment) == 0 {
-		hero.Equipment = Equipment{
-			"item-sword1": &Item{
-				ID:          "item-sword1",
-				Name:        "Short Sword",
-				Description: "a beginner's basic short sword"},
-			"item-armor1": &Item{
-				ID:          "item-armor1",
-				Name:        "Basic Armor",
-				Description: "a beginner's basic set of armor"},
 		}
 	}
 }
@@ -100,6 +85,14 @@ func (hero *Hero) Stat(statID string) int {
 
 	log.Printf("cannot retrieve unknown stat '%v'", statID)
 	return 0
+}
+
+// Weapon returns equipped item in right arm
+func (hero *Hero) Weapon() (*Item, bool) {
+	if item, ok := hero.Equipment["arm-r"]; ok {
+		return item, true
+	}
+	return nil, false
 }
 
 func maxOf(vars ...int) int {

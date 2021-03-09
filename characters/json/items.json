@@ -1,0 +1,36 @@
+{
+    "item-sword1": {
+        "id": "item-sword1",
+        "name": "Basic Sword",
+        "description": "a beginner's sword",
+        "stats": {
+            "dmg-min": 1,
+            "dmg-max": 4
+        }
+    },
+    "item-dagger1": {
+        "id": "item-dagger1",
+        "name": "Small Dagger",
+        "description": "tiny enough for a small thief",
+        "stats": {
+            "dmg-min": 2,
+            "dmg-max": 2
+        }
+    },
+    "item-armor1": {
+        "id": "item-armor1",
+        "name": "Basic Armor",
+        "description": "a beginner's set of armor",
+        "stats": {
+            "def": 5
+        }
+    },
+    "item-boots1": {
+        "id": "item-boots1",
+        "name": "Basic Boots",
+        "description": "a pair of basic bitch boots",
+        "stats": {
+            "eva": 1
+        }
+    }
+}

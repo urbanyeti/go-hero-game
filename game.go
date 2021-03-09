@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
 	"time"
 
@@ -15,10 +16,17 @@ type Game struct {
 	Turn       int
 	Encounters []Encounter
 	Monsters   characters.Monsters
+	Items      characters.Items
 }
 
 func (game Game) String() string {
 	return fmt.Sprintf("Loop: %v Turn: %v | %v", game.Loop, game.Turn, game.Hero)
+}
+
+// LoadData loads resources for the Game
+func (game *Game) LoadData() {
+	game.Monsters = characters.LoadMonsters()
+	game.Items = characters.LoadItems()
 }
 
 // Init sets up the Game
@@ -27,8 +35,8 @@ func (game *Game) Init() {
 	game.Turn = 1
 	game.Hero = &characters.Hero{ID: "Hero-dan", Name: "Dan", Description: "a cool Hero"}
 	game.Hero.SetDefaultStats()
-	game.Hero.SetDefaultEquipment()
-	game.Monsters = characters.LoadMonsters()
+	game.SetDefaultEquipment(game.Hero)
+
 	game.Encounters = []Encounter{
 		CutsceneEncounter{"A sppooky encounter..."},
 		CutsceneEncounter{"A magical gift!"},
@@ -38,6 +46,23 @@ func (game *Game) Init() {
 	for _, monster := range game.Monsters {
 		game.Encounters = append(game.Encounters, CombatEncounter{monster})
 	}
+}
+
+// SetDefaultEquipment initializes the default equipment for the hero
+func (game Game) SetDefaultEquipment(hero *characters.Hero) {
+	hero.Equipment = make(characters.Equipment)
+	hero.Equipment["arm-r"] = game.Item("item-sword1")
+	hero.Equipment["boots"] = game.Item("item-boots1")
+}
+
+// Item retrieves an item
+func (game Game) Item(itemID string) *characters.Item {
+	if item, ok := game.Items[itemID]; ok {
+		return item
+	}
+
+	log.Printf("cannot retrieve unknown item '%v'", itemID)
+	return nil
 }
 
 // PlayTurn plays out the next Game turn
