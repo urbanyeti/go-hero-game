@@ -14,7 +14,10 @@ func main() {
 	game.Init()
 
 	for i := 0; i < maxTurns; i++ {
-		game.PlayTurn()
+		gameOver := game.PlayTurn()
+		if gameOver {
+			break
+		}
 	}
 
 	fmt.Println("Finished game!")

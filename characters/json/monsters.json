@@ -5,6 +5,7 @@
         "description": "a gross little goblin",
         "hp": 10,
         "stats": {
+            "lvl": 1,
             "atk": 5,
             "def": 1,
             "exp": 2
@@ -16,6 +17,7 @@
         "description": "an oversized frog",
         "hp": 8,
         "stats": {
+            "lvl": 1,
             "atk": 6,
             "def": 6,
             "exp": 4
@@ -25,11 +27,12 @@
         "id": "monster-troll",
         "name": "Troll",
         "description": "a fearsome troll",
-        "hp": 20,
+        "hp": 22,
         "stats": {
-            "atk": 7,
+            "lvl": 1,
+            "atk": 10,
             "def": 5,
-            "exp": 5
+            "exp": 9
         }
     }
 }

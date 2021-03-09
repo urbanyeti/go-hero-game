@@ -66,9 +66,12 @@ func (game Game) Item(itemID string) *characters.Item {
 }
 
 // PlayTurn plays out the next Game turn
-func (game *Game) PlayTurn() {
+func (game *Game) PlayTurn() bool {
 	fmt.Println(game)
-	game.Encounters[rand.Intn(len(game.Encounters))].Start(game)
+	gameOver := game.Encounters[rand.Intn(len(game.Encounters))].Start(game)
+	if gameOver {
+		return true
+	}
 	fmt.Println()
 	time.Sleep(turnDelay * time.Millisecond)
 	if game.Turn < loopTurns {
@@ -80,6 +83,7 @@ func (game *Game) PlayTurn() {
 		game.Hero.HP = game.Hero.Stat("hp-max")
 		time.Sleep(loopDelay * time.Millisecond)
 	}
+	return false
 }
 
 func maxOf(vars ...int) int {

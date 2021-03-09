@@ -56,6 +56,19 @@ func (monsters Monsters) Monster(monsterID string) Monster {
 	return Monster{}
 }
 
+// Weapon returns equipped item in right arm
+func (monster *Monster) Weapon() (*Item, bool) {
+	if item, ok := monster.Equipment["arm-r"]; ok {
+		return item, true
+	}
+	return nil, false
+}
+
+// GetName returns the Name
+func (monster *Monster) GetName() string {
+	return monster.Name
+}
+
 // Stat retrieves the current stat value
 func (monster *Monster) Stat(statID string) int {
 	if stat, ok := monster.Stats[statID]; ok {

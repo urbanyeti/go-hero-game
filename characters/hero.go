@@ -95,6 +95,11 @@ func (hero *Hero) Weapon() (*Item, bool) {
 	return nil, false
 }
 
+// GetName returns the Name
+func (hero *Hero) GetName() string {
+	return hero.Name
+}
+
 func maxOf(vars ...int) int {
 	max := vars[0]
 
