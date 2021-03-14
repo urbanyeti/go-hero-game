@@ -61,7 +61,7 @@ func (game *Game) PlayTurn() bool {
 	if gameOver {
 		return true
 	}
-	fmt.Println()
+	//fmt.Println()
 	time.Sleep(turnDelay * time.Millisecond)
 	if game.Turn < loopTurns {
 		game.Turn++
