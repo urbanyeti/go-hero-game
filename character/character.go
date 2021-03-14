@@ -70,17 +70,22 @@ func (c *Character) Weapon() (*Item, bool) {
 	return nil, false
 }
 
-// Name returns hero's Name
+// ID returns character's ID
+func (c *Character) ID() string {
+	return c.id
+}
+
+// Name returns character's Name
 func (c *Character) Name() string {
 	return c.name
 }
 
-// HP returns the hero's HP
+// HP returns the character's HP
 func (c *Character) HP() int {
 	return c.hp
 }
 
-// SetHP sets the hero's HP
+// SetHP sets the character's HP
 func (c *Character) SetHP(hp int) {
 	c.hp = hp
 	log.WithFields(log.Fields{"character": c.id, "hp": hp}).Info("HP set to new value")
