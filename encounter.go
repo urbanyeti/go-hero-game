@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 
@@ -42,7 +41,7 @@ func (encounter CutsceneEncounter) Start(game *Game) bool {
 		hero.AddStat("hp-max", -2)
 		hero.SetHP(math.MinOf(hero.HP(), hero.Stat("hp-max")))
 	}
-	fmt.Println()
+	//fmt.Println()
 	time.Sleep(messageDelay * time.Millisecond)
 	return false
 }
