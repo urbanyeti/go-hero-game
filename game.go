@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"time"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/urbanyeti/go-hero-game/character"
 )
 
@@ -54,7 +55,8 @@ func (game Game) SetDefaultEquipment(hero *character.Hero) {
 
 // PlayTurn plays out the next Game turn
 func (game *Game) PlayTurn() bool {
-	fmt.Println(game)
+	//fmt.Println(game)
+	log.WithFields(log.Fields{"game": game}).Info("turn started")
 	gameOver := game.Encounters[rand.Intn(len(game.Encounters))].Start(game)
 	if gameOver {
 		return true
@@ -64,7 +66,8 @@ func (game *Game) PlayTurn() bool {
 	if game.Turn < loopTurns {
 		game.Turn++
 	} else {
-		fmt.Print("New Loop! Resting...\n\n")
+		log.WithFields(log.Fields{"game": game}).Info("new loop started")
+		//fmt.Print("New Loop! Resting...\n\n")
 		game.Loop++
 		game.Turn = 1
 		game.Hero.SetHP(game.Hero.Stat("hp-max"))

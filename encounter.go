@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"time"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/urbanyeti/go-hero-game/math"
 )
 
@@ -21,7 +22,9 @@ type CutsceneEncounter struct {
 // Start the CutsceneEncounter
 func (encounter CutsceneEncounter) Start(game *Game) bool {
 	hero := game.Hero
-	fmt.Printf("  - Cutscene: %v\n", encounter.Description)
+
+	log.WithFields(log.Fields{"hero": game.Hero, "encounter": encounter}).Info("cutscene encounter started")
+	//fmt.Printf("  - Cutscene: %v\n", encounter.Description)
 	event := rand.Intn(6)
 	switch event {
 	case 0:

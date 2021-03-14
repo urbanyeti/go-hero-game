@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 const loopTurns int = 10
 const maxTurns int = 100
 const messageDelay = 0
@@ -20,6 +18,6 @@ func main() {
 		}
 	}
 
-	fmt.Println("Finished game!")
-	fmt.Println(game.Hero)
+	//fmt.Println("Finished game!")
+	//fmt.Println(game.Hero)
 }
