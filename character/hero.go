@@ -32,14 +32,10 @@ func (hero *Hero) setDefaultStats() {
 // The hero may level up
 func (hero *Hero) GainExp(exp int) {
 	totalExp := hero.Stat("exp") + exp
-	//fmt.Print("    ")
 	if totalExp >= hero.Stat("exp-next") {
 		hero.AddStat("lvl", totalExp/hero.Stat("exp-next"))
 		hero.SetStat("exp", totalExp%hero.Stat("exp-next"))
-		//fmt.Printf(" | Level %v (%v/%v)", hero.Stat("lvl"), hero.Stat("exp"), hero.Stat("exp-next"))
 	} else {
 		hero.AddStat("exp", exp)
-		//fmt.Printf(" | Level %v (%v/%v)", hero.Stat("lvl"), hero.Stat("exp"), hero.Stat("exp-next"))
 	}
-	//fmt.Print("\n")
 }

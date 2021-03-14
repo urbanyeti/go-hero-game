@@ -112,19 +112,16 @@ func (g Game) SetDefaultEquipment(hero *character.Hero) {
 
 // PlayTurn plays out the next Game turn
 func (g *Game) PlayTurn() bool {
-	//fmt.Println(game)
 	log.WithFields(log.Fields{"game": g}).Info("turn started")
 	gameOver := g.Encounters[rand.Intn(len(g.Encounters))].Start(g)
 	if gameOver {
 		return true
 	}
-	//fmt.Println()
 	time.Sleep(turnDelay * time.Millisecond)
 	if g.Turn < loopTurns {
 		g.Turn++
 	} else {
 		log.WithFields(log.Fields{"game": g}).Info("new loop started")
-		//fmt.Print("New Loop! Resting...\n\n")
 		g.Loop++
 		g.Turn = 1
 		g.Hero.SetHP(g.Hero.Stat("hp-max"))

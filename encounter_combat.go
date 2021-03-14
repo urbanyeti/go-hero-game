@@ -26,35 +26,26 @@ type Fighter interface {
 
 // Start the fight
 func (encounter CombatEncounter) Start(game *Game) bool {
-	//fmt.Printf("  - Combat: A wild %v appears!\n", encounter.Monster.Name())
 	log.WithFields(log.Fields{"hero": game.Hero, "monster": encounter.Monster}).Info("combat encounter started")
 
 	playersMove := true
 	for i := 1; game.Hero.HP() > 0 && encounter.Monster.HP() > 0; i++ {
 		if playersMove {
 			totalDmg := calculateDamage(game.Hero, &encounter.Monster)
-			//fmt.Printf("    - Round %v: %v\n", i, message)
 			encounter.Monster.TakeDamage(totalDmg)
 		} else {
 			totalDmg := calculateDamage(&encounter.Monster, game.Hero)
-			//fmt.Printf("    - Round %v: %v\n", i, message)
 			game.Hero.TakeDamage(totalDmg)
 		}
-		//fmt.Printf("      %v: %v | %v: %v\n", game.Hero.Name(), game.Hero.HP(), encounter.Monster.Name(), encounter.Monster.HP())
 		playersMove = !playersMove
 		time.Sleep(messageDelay * time.Millisecond)
 	}
 
 	if game.Hero.HP() <= 0 {
 		log.WithFields(log.Fields{"hero": game.Hero.ID()}).Info("hero died")
-		// fmt.Println()
-		// fmt.Println("*****************")
-		// fmt.Println("X YOU HAVE DIED X")
-		// fmt.Println("*****************")
 		return true
 	}
 
-	//fmt.Printf("    %v slays the %v!\n", game.Hero.Name(), encounter.Monster.Name())
 	log.WithFields(log.Fields{"hero": game.Hero.ID(), "monster": encounter.Monster.ID()}).Info("monster slayed")
 	game.Hero.GainExp(encounter.Monster.Stat("exp"))
 	return false

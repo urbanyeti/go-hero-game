@@ -16,7 +16,4 @@ func main() {
 			break
 		}
 	}
-
-	//fmt.Println("Finished game!")
-	//fmt.Println(game.Hero)
 }

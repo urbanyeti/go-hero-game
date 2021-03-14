@@ -23,7 +23,6 @@ func (encounter CutsceneEncounter) Start(game *Game) bool {
 	hero := game.Hero
 
 	log.WithFields(log.Fields{"hero": game.Hero, "encounter": encounter}).Info("cutscene encounter started")
-	//fmt.Printf("  - Cutscene: %v\n", encounter.Description)
 	event := rand.Intn(6)
 	switch event {
 	case 0:
@@ -41,7 +40,6 @@ func (encounter CutsceneEncounter) Start(game *Game) bool {
 		hero.AddStat("hp-max", -2)
 		hero.SetHP(math.MinOf(hero.HP(), hero.Stat("hp-max")))
 	}
-	//fmt.Println()
 	time.Sleep(messageDelay * time.Millisecond)
 	return false
 }
