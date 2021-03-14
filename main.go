@@ -8,7 +8,6 @@ const loopDelay = 1000
 
 func main() {
 	game := Game{}
-	game.LoadData()
 	game.Init()
 
 	for i := 0; i < maxTurns; i++ {

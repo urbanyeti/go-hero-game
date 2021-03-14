@@ -1,5 +1,5 @@
-{
-    "monster-goblin": {
+[
+    {
         "id": "monster-goblin",
         "name": "Goblin",
         "desc": "gross little goblin{s}",
@@ -11,9 +11,10 @@
             "spd": 5,
             "exp": 2
         },
-        "items" : {}
+        "abilities" : [],
+        "items" : ["item-goblinsword1"]
     },
-    "monster-frog": {
+    {
         "id": "monster-frog",
         "name": "Giant Frog",
         "desc": "oversized frog{s}",
@@ -25,9 +26,10 @@
             "spd": 4,
             "exp": 4
         },
-        "items" : {}
+        "abilities" : ["attack-claw1"],
+        "items" : []
     },
-    "monster-troll": {
+    {
         "id": "monster-troll",
         "name": "Troll",
         "desc": "fearsome troll{s}",
@@ -36,9 +38,10 @@
             "lvl": 1,
             "atk": 10,
             "def": 5,
-            "spd": 1,
+            "spd": 3,
             "exp": 9
         },
-        "items" : {}
+        "abilities" : [],
+        "items" : ["item-club1"]
     }
-}
+]

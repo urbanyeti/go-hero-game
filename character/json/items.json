@@ -1,5 +1,20 @@
-{
-    "item-sword1": {
+[
+    {
+        "id": "item-goblinsword1",
+        "name": "Goblin Sword",
+        "desc": "crappy goblin-made sword{s}",
+        "tags": {
+            "equip": true,
+            "arm": true,
+            "weapon": true
+        },
+        "stats": {
+            "dmg-min": 1,
+            "dmg-max": 3,
+            "spd": 80
+        }
+    },
+    {
         "id": "item-sword1",
         "name": "Basic Sword",
         "desc": "basic steel sword{s}",
@@ -14,14 +29,15 @@
             "spd": 80
         }
     },
-    "item-dagger1": {
+    {
         "id": "item-dagger1",
         "name": "Small Dagger",
         "desc": "small steel dagger{s}",
         "tags": {
             "equip": true,
             "arm": true,
-            "weapon": true
+            "weapon": true,
+            "light": true
         },
         "stats": {
             "dmg-min": 2,
@@ -29,7 +45,23 @@
             "spd": 50
         }
     },
-    "item-armor1": {
+    {
+        "id": "item-club1",
+        "name": "Giant Club",
+        "desc": "tree-sized club{s}",
+        "tags": {
+            "equip": true,
+            "arm": true,
+            "weapon": true,
+            "heavy": true
+        },
+        "stats": {
+            "dmg-min": 3,
+            "dmg-max": 5,
+            "spd": 100
+        }
+    },
+    {
         "id": "item-armor1",
         "name": "Basic Armor",
         "desc": "basic set of armor{s}",
@@ -42,7 +74,7 @@
             "spd": 5
         }
     },
-    "item-boots1": {
+    {
         "id": "item-boots1",
         "name": "Basic Boots",
         "desc": "pair{s} of basic boots",
@@ -55,4 +87,4 @@
             "spd": 1
         }
     }
-}
+]

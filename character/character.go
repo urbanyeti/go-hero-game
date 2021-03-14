@@ -19,12 +19,13 @@ type Character struct {
 }
 
 type CharacterJSON struct {
-	ID    string
-	Name  string
-	Desc  string
-	HP    int
-	Stats Stats
-	Items Items
+	ID        string
+	Name      string
+	Desc      string
+	HP        int
+	Stats     Stats
+	Items     Items
+	Abilities Abilities
 }
 
 func NewCharacter(id string, name string, desc string) Character {

@@ -33,15 +33,20 @@ type Tags map[string]bool
 
 // LoadItems grabs all the item data from json
 func LoadItems() LoadedItems {
+	loaded := make(LoadedItems)
 	jsonFile, err := os.Open("./character/json/items.json")
 	if err != nil {
 		log.Error(err)
 	}
 	defer jsonFile.Close()
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-	var items LoadedItems
+	var items []*Item
 	json.Unmarshal(byteValue, &items)
-	return items
+	for _, i := range items {
+		loaded[i.ID] = *i
+	}
+
+	return loaded
 }
 
 // Stat retrieves the current stat value
