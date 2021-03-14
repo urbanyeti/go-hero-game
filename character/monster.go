@@ -13,7 +13,7 @@ type Monster struct {
 	Character
 }
 
-func (c CharacterJSON) Load() Monster {
+func (c CharacterJSON) LoadMonster() Monster {
 	return Monster{Character{
 		id:    c.ID,
 		name:  c.Name,
@@ -39,7 +39,7 @@ func LoadMonsters() LoadedMonsters {
 	json.Unmarshal(byteValue, &jsonCharacters)
 	monsters := make(LoadedMonsters)
 	for key, character := range jsonCharacters {
-		monsters[key] = Monster(character.Load())
+		monsters[key] = Monster(character.LoadMonster())
 	}
 
 	return monsters
