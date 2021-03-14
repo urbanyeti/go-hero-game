@@ -18,6 +18,15 @@ type Character struct {
 	items Items
 }
 
+type CharacterJSON struct {
+	ID    string
+	Name  string
+	Desc  string
+	HP    int
+	Stats Stats
+	Items Items
+}
+
 func NewCharacter(id string, name string, desc string) Character {
 	c := Character{id: id, name: name, desc: desc}
 
@@ -28,13 +37,9 @@ func NewCharacter(id string, name string, desc string) Character {
 func (c *Character) AddStat(statID string, value int) {
 	if stat, ok := c.stats[statID]; ok {
 		c.stats[statID] = math.MaxOf(stat+value, 1)
-		if value > 0 {
-			log.Info("%v gains %v %v", c.name, value, statID)
-		} else {
-			log.Info("%v loses %v %v", c.name, value, statID)
-		}
+		log.WithFields(log.Fields{"character": c.id, "stat": statID, "old": stat, "new": c.stats[statID]}).Info("stat modified")
 	} else {
-		log.Warn("Cannot add to missing stat '%v'", statID)
+		log.WithFields(log.Fields{"statID": statID}).Warn("cannot add missing stat '%v'", statID)
 	}
 }
 
@@ -43,7 +48,7 @@ func (c *Character) SetStat(statID string, value int) {
 	if _, ok := c.stats[statID]; ok {
 		c.stats[statID] = value
 	} else {
-		log.Warn("Cannot set missing stat '%v'", statID)
+		log.WithFields(log.Fields{"statID": statID}).Warn("cannot set missing stat '%v'", statID)
 	}
 }
 
@@ -53,7 +58,7 @@ func (c *Character) Stat(statID string) int {
 		return stat
 	}
 
-	log.Warn("Cannot retrieve missing stat '%v'", statID)
+	log.WithFields(log.Fields{"statID": statID}).Warn("cannot retrieve missing stat '%v'", statID)
 	return 0
 }
 
@@ -78,17 +83,17 @@ func (c *Character) HP() int {
 // SetHP sets the hero's HP
 func (c *Character) SetHP(hp int) {
 	c.hp = hp
-	log.Info("%v's HP set to {hp}", c.name, hp)
+	log.WithFields(log.Fields{"character": c.id, "hp": hp}).Info("HP set to new value")
 }
 
 func (c *Character) TakeDamage(dmg int) {
 	c.hp -= dmg
-	log.Info("%v took %v damage", c.name, dmg)
+	log.WithFields(log.Fields{"character": c.id, "dmg": dmg}).Info("damage taken")
 }
 
 func (c *Character) Heal(health int) {
 	c.hp += health
-	log.Info("%v gained %v health", c.name, health)
+	log.WithFields(log.Fields{"character": c.id, "health": health}).Info("health gained")
 }
 
 func (c *Character) Equip(items ...Item) {
@@ -99,7 +104,13 @@ func (c *Character) Equip(items ...Item) {
 				c.items["arm-r"] = &item
 				log.WithFields(log.Fields{"character": c.id, "item": item.ID}).Info("equipped weapon")
 			} else if item.HasTag("armor") {
-				log.WithFields(log.Fields{"character": c.id, "item": item.ID}).Info("equipped armor")
+				if item.HasTag("torso") {
+					c.items["torso"] = &item
+					log.WithFields(log.Fields{"character": c.id, "item": item.ID}).Info("equipped torso")
+				} else if item.HasTag("feet") {
+					c.items["feet"] = &item
+					log.WithFields(log.Fields{"character": c.id, "item": item.ID}).Info("equipped feet")
+				}
 			}
 		}
 	}

@@ -21,7 +21,7 @@ type CutsceneEncounter struct {
 // Start the CutsceneEncounter
 func (encounter CutsceneEncounter) Start(game *Game) bool {
 	hero := game.Hero
-	fmt.Printf("  - Cutscene: %v\n    - ", encounter.Description)
+	fmt.Printf("  - Cutscene: %v\n", encounter.Description)
 	event := rand.Intn(6)
 	switch event {
 	case 0:

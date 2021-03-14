@@ -8,9 +8,20 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// Monster for combat encounters
+// Monster is an agent in the world
 type Monster struct {
 	Character
+}
+
+func (c CharacterJSON) Load() Monster {
+	return Monster{Character{
+		id:    c.ID,
+		name:  c.Name,
+		desc:  c.Desc,
+		hp:    c.HP,
+		stats: c.Stats,
+		items: c.Items,
+	}}
 }
 
 // Monsters is a map of loaded monsters
@@ -24,14 +35,13 @@ func LoadMonsters() LoadedMonsters {
 	}
 	defer jsonFile.Close()
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-	var objmap map[string]json.RawMessage
+	var jsonCharacters map[string]*CharacterJSON
+	json.Unmarshal(byteValue, &jsonCharacters)
 	monsters := make(LoadedMonsters)
-	json.Unmarshal(byteValue, &objmap)
-	for key, element := range objmap {
-		var monster Monster
-		json.Unmarshal(element, &monster)
-		monsters[key] = monster
+	for key, character := range jsonCharacters {
+		monsters[key] = Monster(character.Load())
 	}
+
 	return monsters
 }
 
