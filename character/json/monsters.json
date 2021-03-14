@@ -2,7 +2,7 @@
     "monster-goblin": {
         "id": "monster-goblin",
         "name": "Goblin",
-        "desc": "a gross little goblin",
+        "desc": "gross little goblin{s}",
         "hp": 10,
         "stats": {
             "lvl": 1,
@@ -16,7 +16,7 @@
     "monster-frog": {
         "id": "monster-frog",
         "name": "Giant Frog",
-        "desc": "an oversized frog",
+        "desc": "oversized frog{s}",
         "hp": 8,
         "stats": {
             "lvl": 1,
@@ -30,7 +30,7 @@
     "monster-troll": {
         "id": "monster-troll",
         "name": "Troll",
-        "desc": "a fearsome troll",
+        "desc": "fearsome troll{s}",
         "hp": 22,
         "stats": {
             "lvl": 1,
