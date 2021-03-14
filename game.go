@@ -2,21 +2,20 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"math/rand"
 	"time"
 
-	"github.com/urbanyeti/go-hero-game/characters"
+	"github.com/urbanyeti/go-hero-game/character"
 )
 
 // Game contains state and data about the game session
 type Game struct {
-	Hero       *characters.Hero
+	Hero       *character.Hero
 	Loop       int
 	Turn       int
 	Encounters []Encounter
-	Monsters   characters.Monsters
-	Items      characters.Items
+	Monsters   character.LoadedMonsters
+	Items      character.LoadedItems
 }
 
 func (game Game) String() string {
@@ -25,16 +24,15 @@ func (game Game) String() string {
 
 // LoadData loads resources for the Game
 func (game *Game) LoadData() {
-	game.Monsters = characters.LoadMonsters()
-	game.Items = characters.LoadItems()
+	game.Monsters = character.LoadMonsters()
+	game.Items = character.LoadItems()
 }
 
 // Init sets up the Game
 func (game *Game) Init() {
 	game.Loop = 1
 	game.Turn = 1
-	game.Hero = &characters.Hero{ID: "Hero-dan", Name: "Dan", Description: "a cool Hero"}
-	game.Hero.SetDefaultStats()
+	game.Hero = character.NewHero("hero-dan", "Dan", "cool hero")
 	game.SetDefaultEquipment(game.Hero)
 
 	game.Encounters = []Encounter{
@@ -49,20 +47,9 @@ func (game *Game) Init() {
 }
 
 // SetDefaultEquipment initializes the default equipment for the hero
-func (game Game) SetDefaultEquipment(hero *characters.Hero) {
-	hero.Equipment = make(characters.Equipment)
-	hero.Equipment["arm-r"] = game.Item("item-sword1")
-	hero.Equipment["boots"] = game.Item("item-boots1")
-}
-
-// Item retrieves an item
-func (game Game) Item(itemID string) *characters.Item {
-	if item, ok := game.Items[itemID]; ok {
-		return item
-	}
-
-	log.Printf("cannot retrieve unknown item '%v'", itemID)
-	return nil
+func (game Game) SetDefaultEquipment(hero *character.Hero) {
+	hero.Equip(game.Items["item-sword1"])
+	hero.Equip(game.Items["item-boots1"])
 }
 
 // PlayTurn plays out the next Game turn
@@ -80,7 +67,7 @@ func (game *Game) PlayTurn() bool {
 		fmt.Print("New Loop! Resting...\n\n")
 		game.Loop++
 		game.Turn = 1
-		game.Hero.HP = game.Hero.Stat("hp-max")
+		game.Hero.SetHP(game.Hero.Stat("hp-max"))
 		time.Sleep(loopDelay * time.Millisecond)
 	}
 	return false

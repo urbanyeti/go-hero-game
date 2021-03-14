@@ -2,37 +2,43 @@
     "monster-goblin": {
         "id": "monster-goblin",
         "name": "Goblin",
-        "description": "a gross little goblin",
+        "desc": "a gross little goblin",
         "hp": 10,
         "stats": {
             "lvl": 1,
             "atk": 5,
             "def": 1,
+            "spd": 5,
             "exp": 2
-        }
+        },
+        "items" : {}
     },
     "monster-frog": {
         "id": "monster-frog",
         "name": "Giant Frog",
-        "description": "an oversized frog",
+        "desc": "an oversized frog",
         "hp": 8,
         "stats": {
             "lvl": 1,
             "atk": 6,
             "def": 6,
+            "spd": 4,
             "exp": 4
-        }
+        },
+        "items" : {}
     },
     "monster-troll": {
         "id": "monster-troll",
         "name": "Troll",
-        "description": "a fearsome troll",
+        "desc": "a fearsome troll",
         "hp": 22,
         "stats": {
             "lvl": 1,
             "atk": 10,
             "def": 5,
+            "spd": 1,
             "exp": 9
-        }
+        },
+        "items" : {}
     }
 }
