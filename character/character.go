@@ -10,12 +10,13 @@ import (
 
 // A character is an agent in the world
 type Character struct {
-	id    string
-	name  string
-	desc  string
-	hp    int
-	stats Stats
-	items Items
+	id        string
+	name      string
+	desc      string
+	hp        int
+	stats     Stats
+	items     Items
+	abilities Abilities
 }
 
 type CharacterJSON struct {
@@ -23,15 +24,35 @@ type CharacterJSON struct {
 	Name      string
 	Desc      string
 	HP        int
-	Stats     Stats
-	Items     Items
-	Abilities Abilities
+	Stats     map[string]int
+	Items     []string
+	Abilities []string
 }
 
 func NewCharacter(id string, name string, desc string) Character {
 	c := Character{id: id, name: name, desc: desc}
 
 	return c
+}
+
+// ID returns character's ID
+func (c *Character) ID() string {
+	return c.id
+}
+
+// Name returns character's name
+func (c *Character) Name() string {
+	return c.name
+}
+
+// Desc returns character's description
+func (c *Character) Desc() string {
+	return c.desc
+}
+
+// HP returns the character's current HP
+func (c *Character) HP() int {
+	return c.hp
 }
 
 // AddStat adds to the specified Stat value
@@ -71,22 +92,7 @@ func (c *Character) Weapon() (*Item, bool) {
 	return nil, false
 }
 
-// ID returns character's ID
-func (c *Character) ID() string {
-	return c.id
-}
-
-// Name returns character's Name
-func (c *Character) Name() string {
-	return c.name
-}
-
-// HP returns the character's HP
-func (c *Character) HP() int {
-	return c.hp
-}
-
-// SetHP sets the character's HP
+// SetHP sets the character's HP to the specified value
 func (c *Character) SetHP(hp int) {
 	c.hp = hp
 	log.WithFields(log.Fields{"character": c.id, "hp": hp}).Info("HP set to new value")
@@ -108,14 +114,14 @@ func (c *Character) Equip(items ...Item) {
 		if item.HasTag("equip") {
 			if item.HasTag("weapon") && item.HasTag("arm") {
 				c.items["arm-r"] = &item
-				log.WithFields(log.Fields{"character": c.id, "item": item.ID}).Info("equipped weapon")
+				log.WithFields(log.Fields{"character": c.id, "item": item.ID()}).Info("equipped weapon")
 			} else if item.HasTag("armor") {
 				if item.HasTag("torso") {
 					c.items["torso"] = &item
-					log.WithFields(log.Fields{"character": c.id, "item": item.ID}).Info("equipped torso")
+					log.WithFields(log.Fields{"character": c.id, "item": item.ID()}).Info("equipped torso")
 				} else if item.HasTag("feet") {
 					c.items["feet"] = &item
-					log.WithFields(log.Fields{"character": c.id, "item": item.ID}).Info("equipped feet")
+					log.WithFields(log.Fields{"character": c.id, "item": item.ID()}).Info("equipped feet")
 				}
 			}
 		}
@@ -123,5 +129,5 @@ func (c *Character) Equip(items ...Item) {
 }
 
 func (c Character) String() string {
-	return fmt.Sprintf("%v - HP: %v | %v | %v", c.name, c.hp, c.stats, c.items)
+	return fmt.Sprintf("%v - HP: %v | %v | %v | %v", c.name, c.hp, c.stats, c.abilities, c.items)
 }

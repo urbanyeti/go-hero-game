@@ -63,10 +63,10 @@ func (g *Game) LoadAbilities() {
 	}
 	defer jsonFile.Close()
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-	var abilities []*character.Ability
-	json.Unmarshal(byteValue, &abilities)
-	for _, a := range abilities {
-		g.Abilities[a.ID] = *a
+	var jsonVals []*character.AbilityJSON
+	json.Unmarshal(byteValue, &jsonVals)
+	for _, a := range jsonVals {
+		g.Abilities[a.ID] = a.LoadAbility()
 	}
 }
 
@@ -80,10 +80,10 @@ func (g *Game) LoadItems() {
 	}
 	defer jsonFile.Close()
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-	var items []*character.Item
-	json.Unmarshal(byteValue, &items)
-	for _, i := range items {
-		g.Items[i.ID] = *i
+	var jsonVals []*character.ItemJSON
+	json.Unmarshal(byteValue, &jsonVals)
+	for _, i := range jsonVals {
+		g.Items[i.ID] = i.LoadItem()
 	}
 }
 
@@ -100,7 +100,7 @@ func (g *Game) LoadMonsters() {
 	var jsonVals []*character.CharacterJSON
 	json.Unmarshal(byteValue, &jsonVals)
 	for _, c := range jsonVals {
-		g.Monsters[c.ID] = character.Monster(c.LoadMonster())
+		g.Monsters[c.ID] = character.Monster(c.LoadMonster(g.Abilities, g.Items))
 	}
 }
 
