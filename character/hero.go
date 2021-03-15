@@ -35,7 +35,7 @@ func (hero *Hero) GainExp(exp int) {
 	totalExp := hero.Stat("exp") + exp
 	if totalExp >= hero.Stat("exp-next") {
 		hero.AddStat("lvl", totalExp/hero.Stat("exp-next"))
-		hero.AddStat("exp-next", totalExp/hero.Stat("exp-next"))
+		hero.AddStat("exp-next", hero.Stat("lvl")*3)
 		hero.SetStat("exp", totalExp%hero.Stat("exp-next"))
 	} else {
 		hero.AddStat("exp", exp)
