@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 
@@ -12,7 +13,7 @@ import (
 
 // A CombatEncounter consists of a fight with a monster
 type CombatEncounter struct {
-	Monsters map[string]character.Monster
+	Monsters []character.Monster
 }
 
 type Fighter interface {
@@ -36,18 +37,23 @@ type Attack struct {
 
 // Start the fight
 func (encounter CombatEncounter) Start(game *Game) bool {
-	log.WithFields(log.Fields{"hero": game.Hero, "monsters": encounter.Monsters}).Info("combat started")
-	keys := make([]string, 0, len(encounter.Monsters))
-	for key := range encounter.Monsters {
+	monsters := map[string]character.Monster{}
+	for i, c := range encounter.Monsters {
+		monsters[fmt.Sprint(c.ID(), i)] = c
+	}
+
+	log.WithFields(log.Fields{"hero": game.Hero, "monsters": monsters}).Info("combat started")
+	keys := make([]string, 0, len(monsters))
+	for key := range monsters {
 		keys = append(keys, key)
 	}
 
 	target, keys := keys[0], keys[1:]
 	damager := game.Hero.SelectDamager()
-	targetM := encounter.Monsters[target]
+	targetM := monsters[target]
 	attacks := map[string]*Attack{game.Hero.ID(): {game.Hero, damager, &targetM, target, 0, damager.Stat("spd")}}
 
-	for k, m := range encounter.Monsters {
+	for k, m := range monsters {
 		damager = m.SelectDamager()
 		attacks[k] = &Attack{&m, damager, game.Hero, game.Hero.ID(), 0, damager.Stat("spd")}
 	}
@@ -60,16 +66,16 @@ func (encounter CombatEncounter) Start(game *Game) bool {
 				a.dealDamage()
 				if a.Target.HP() <= 0 {
 					if _, isHero := a.Target.(*character.Hero); isHero {
-						log.WithFields(log.Fields{"hero": game.Hero.ID()}).Info("hero died")
+						log.WithFields(log.Fields{"hero": game.Hero}).Info("hero died")
 						return true
 					}
 
 					log.WithFields(log.Fields{"hero": game.Hero.ID(), "monster": a.Target.ID()}).Info("monster slain")
 					game.Hero.GainExp(a.Target.Stat("exp"))
-					delete(encounter.Monsters, a.TargetID)
+					delete(monsters, a.TargetID)
 					if len(keys) > 0 {
 						a.TargetID, keys = keys[0], keys[1:]
-						targetM := encounter.Monsters[target]
+						targetM := monsters[target]
 						a.Target = &targetM
 					}
 

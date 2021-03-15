@@ -49,7 +49,7 @@ func (g *Game) Init() {
 	}
 
 	for _, monster := range g.Monsters {
-		g.Encounters = append(g.Encounters, CombatEncounter{map[string]character.Monster{monster.ID(): monster}})
+		g.Encounters = append(g.Encounters, CombatEncounter{[]character.Monster{monster}})
 	}
 }
 
@@ -113,7 +113,8 @@ func (g Game) SetDefaultEquipment(hero *character.Hero) {
 // PlayTurn plays out the next Game turn
 func (g *Game) PlayTurn() bool {
 	log.WithFields(log.Fields{"game": g}).Info("turn started")
-	gameOver := g.Encounters[rand.Intn(len(g.Encounters))].Start(g)
+	random := rand.Intn(len(g.Encounters))
+	gameOver := g.Encounters[random].Start(g)
 	if gameOver {
 		return true
 	}

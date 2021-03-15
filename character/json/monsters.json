@@ -11,7 +11,7 @@
             "spd": 5,
             "exp": 2
         },
-        "abilities" : [],
+        "abilities" : ["attack-claw1"],
         "items" : ["item-goblinsword1"]
     },
     {
@@ -26,7 +26,7 @@
             "spd": 4,
             "exp": 4
         },
-        "abilities" : ["attack-claw1"],
+        "abilities" : ["attack-tongue1", "attack-spit1"],
         "items" : []
     },
     {
