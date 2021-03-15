@@ -12,7 +12,7 @@ import (
 
 // A CombatEncounter consists of a fight with a monster
 type CombatEncounter struct {
-	Monster character.Monster
+	Monsters map[string]character.Monster
 }
 
 type Fighter interface {
@@ -20,54 +20,94 @@ type Fighter interface {
 	Name() string
 	HP() int
 	Stat(string) int
-	Weapon() (*character.Item, bool)
+	Weapons() ([]*character.Item, bool)
 	TakeDamage(int)
+	SelectDamager() character.Damager
+}
+
+type Attack struct {
+	Attacker Fighter
+	Damager  character.Damager
+	Target   Fighter
+	TargetID string
+	Spd      int
+	ExecSpd  int
 }
 
 // Start the fight
 func (encounter CombatEncounter) Start(game *Game) bool {
-	log.WithFields(log.Fields{"hero": game.Hero, "monster": encounter.Monster}).Info("combat encounter started")
+	log.WithFields(log.Fields{"hero": game.Hero, "monsters": encounter.Monsters}).Info("combat started")
+	keys := make([]string, 0, len(encounter.Monsters))
+	for key := range encounter.Monsters {
+		keys = append(keys, key)
+	}
 
-	playersMove := true
-	for i := 1; game.Hero.HP() > 0 && encounter.Monster.HP() > 0; i++ {
-		if playersMove {
-			totalDmg := calculateDamage(game.Hero, &encounter.Monster)
-			encounter.Monster.TakeDamage(totalDmg)
-		} else {
-			totalDmg := calculateDamage(&encounter.Monster, game.Hero)
-			game.Hero.TakeDamage(totalDmg)
+	target, keys := keys[0], keys[1:]
+	damager := game.Hero.SelectDamager()
+	targetM := encounter.Monsters[target]
+	attacks := map[string]*Attack{game.Hero.ID(): {game.Hero, damager, &targetM, target, 0, damager.Stat("spd")}}
+
+	for k, m := range encounter.Monsters {
+		damager = m.SelectDamager()
+		attacks[k] = &Attack{&m, damager, game.Hero, game.Hero.ID(), 0, damager.Stat("spd")}
+	}
+
+	for {
+		for _, a := range attacks {
+			a.Spd += a.Attacker.Stat("spd")
+			if a.Spd >= a.ExecSpd {
+				// Execute attack
+				a.dealDamage()
+				if a.Target.HP() <= 0 {
+					if _, isHero := a.Target.(*character.Hero); isHero {
+						log.WithFields(log.Fields{"hero": game.Hero.ID()}).Info("hero died")
+						return true
+					}
+
+					log.WithFields(log.Fields{"hero": game.Hero.ID(), "monster": a.Target.ID()}).Info("monster slain")
+					game.Hero.GainExp(a.Target.Stat("exp"))
+					delete(encounter.Monsters, a.TargetID)
+					if len(keys) > 0 {
+						a.TargetID, keys = keys[0], keys[1:]
+						targetM := encounter.Monsters[target]
+						a.Target = &targetM
+					}
+
+					log.WithFields(log.Fields{"hero": game.Hero.ID()}).Info("combat finished")
+					return false
+				}
+				damager = a.Attacker.SelectDamager()
+				a.Spd = 0
+				a.Damager = damager
+				a.ExecSpd = damager.Stat("spd")
+			}
 		}
-		playersMove = !playersMove
 		time.Sleep(messageDelay * time.Millisecond)
 	}
-
-	if game.Hero.HP() <= 0 {
-		log.WithFields(log.Fields{"hero": game.Hero.ID()}).Info("hero died")
-		return true
-	}
-
-	log.WithFields(log.Fields{"hero": game.Hero.ID(), "monster": encounter.Monster.ID()}).Info("monster slayed")
-	game.Hero.GainExp(encounter.Monster.Stat("exp"))
-	return false
 }
 
-func calculateDamage(attacker Fighter, defender Fighter) int {
-	baseDmg := attacker.Stat("atk") + defender.Stat("lvl")
-	weaponDmg := 1
-	if weapon, ok := attacker.Weapon(); ok {
-		weaponDmg = rand.Intn(weapon.Stat("dmg-min")+weapon.Stat("dmg-max")) + (weapon.Stat("dmg-min"))
-	}
-	defenderDef := defender.Stat("def")
-	totalDmg := math.MaxOf(baseDmg+weaponDmg-defenderDef, 0)
+func (a Attack) dealDamage() {
+	baseDmg := a.Attacker.Stat("atk") + a.Target.Stat("lvl")
+	rollDmg := rand.Intn(a.Damager.Stat("dmg-min")+a.Damager.Stat("dmg-max")) + (a.Damager.Stat("dmg-min"))
+	defenderDef := a.Target.Stat("def")
+	totalDmg := math.MaxOf(baseDmg+rollDmg-defenderDef, 0)
+
+	a.Target.TakeDamage(totalDmg)
 	log.WithFields(
 		log.Fields{
-			"attacker":    attacker,
-			"defender":    defender,
+			"attack":      a,
 			"baseDmg":     baseDmg,
-			"weaponDmg":   weaponDmg,
+			"rollDmg":     rollDmg,
 			"defenderDef": defenderDef,
 			"totalDmg":    totalDmg,
-		}).Info("damage calculated")
+		}).Info("damage dealt")
+}
 
-	return totalDmg
+func removeAttack(s []string, r string) []string {
+	for i, v := range s {
+		if v == r {
+			return append(s[:i], s[i+1:]...)
+		}
+	}
+	return s
 }

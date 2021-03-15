@@ -20,7 +20,7 @@ type Game struct {
 	Encounters []Encounter
 	Monsters   map[string]character.Monster
 	Abilities  map[string]character.Ability
-	Items      map[string]character.Item
+	Items      map[string]*character.Item
 }
 
 func (g Game) String() string {
@@ -49,7 +49,7 @@ func (g *Game) Init() {
 	}
 
 	for _, monster := range g.Monsters {
-		g.Encounters = append(g.Encounters, CombatEncounter{monster})
+		g.Encounters = append(g.Encounters, CombatEncounter{map[string]character.Monster{monster.ID(): monster}})
 	}
 }
 
@@ -72,7 +72,7 @@ func (g *Game) LoadAbilities() {
 
 // LoadItems grabs all the items from json
 func (g *Game) LoadItems() {
-	g.Items = make(map[string]character.Item)
+	g.Items = make(map[string]*character.Item)
 
 	jsonFile, err := os.Open("./character/json/items.json")
 	if err != nil {

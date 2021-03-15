@@ -2,7 +2,7 @@ package main
 
 const loopTurns int = 10
 const maxTurns int = 100
-const messageDelay = 0
+const messageDelay = 100
 const turnDelay = 200
 const loopDelay = 1000
 

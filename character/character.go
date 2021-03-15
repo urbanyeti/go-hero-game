@@ -2,6 +2,7 @@ package character
 
 import (
 	"fmt"
+	"math/rand"
 
 	log "github.com/sirupsen/logrus"
 
@@ -15,8 +16,9 @@ type Character struct {
 	desc      string
 	hp        int
 	stats     Stats
-	items     Items
+	equipment Equipment
 	abilities Abilities
+	items     []*Item
 }
 
 type CharacterJSON struct {
@@ -84,10 +86,12 @@ func (c *Character) Stat(statID string) int {
 	return 0
 }
 
-// Weapon returns equipped item in right arm
-func (c *Character) Weapon() (*Item, bool) {
-	if item, ok := c.items["arm-r"]; ok {
-		return item, true
+// Weapons returns equipped weapons
+func (c *Character) Weapons() ([]*Item, bool) {
+	weapons := []*Item{}
+	if item, ok := c.equipment["arm-r"]; ok {
+		weapons = append(weapons, item)
+		return weapons, true
 	}
 	return nil, false
 }
@@ -108,19 +112,47 @@ func (c *Character) Heal(health int) {
 	log.WithFields(log.Fields{"character": c.id, "health": health}).Info("health gained")
 }
 
-func (c *Character) Equip(items ...Item) {
+type Damager interface {
+	ID() string
+	Name() string
+	Desc() string
+	Stat(string) int
+}
+
+func (c *Character) SelectDamager() Damager {
+	attacks := c.Damagers()
+	random := rand.Intn(len(attacks))
+	return attacks[random]
+}
+
+func (c *Character) Damagers() []Damager {
+	attacks := []Damager{}
+	if weapons, ok := c.Weapons(); ok {
+		for _, v := range weapons {
+			attacks = append(attacks, v)
+		}
+	}
+
+	for _, v := range c.abilities {
+		attacks = append(attacks, v)
+	}
+
+	return attacks
+}
+
+func (c *Character) Equip(items ...*Item) {
 	for _, item := range items {
 
 		if item.HasTag("equip") {
 			if item.HasTag("weapon") && item.HasTag("arm") {
-				c.items["arm-r"] = &item
+				c.equipment["arm-r"] = item
 				log.WithFields(log.Fields{"character": c.id, "item": item.ID()}).Info("equipped weapon")
 			} else if item.HasTag("armor") {
 				if item.HasTag("torso") {
-					c.items["torso"] = &item
+					c.equipment["torso"] = item
 					log.WithFields(log.Fields{"character": c.id, "item": item.ID()}).Info("equipped torso")
 				} else if item.HasTag("feet") {
-					c.items["feet"] = &item
+					c.equipment["feet"] = item
 					log.WithFields(log.Fields{"character": c.id, "item": item.ID()}).Info("equipped feet")
 				}
 			}

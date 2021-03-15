@@ -5,21 +5,22 @@ type Monster struct {
 	Character
 }
 
-func (c CharacterJSON) LoadMonster(la map[string]Ability, li map[string]Item) Monster {
-
+func (c CharacterJSON) LoadMonster(la map[string]Ability, li map[string]*Item) Monster {
+	// Add values of loaded abilities to monster
 	abilities := make(Abilities)
 	for _, a := range c.Abilities {
 		value := la[a]
 		abilities[a] = &value
 	}
 
-	items := make(Items)
+	// Add values of loaded items to monster
+	items := []*Item{}
 	for _, i := range c.Items {
 		value := li[i]
-		items[i] = &value
+		items = append(items, value)
 	}
 
-	return Monster{Character{
+	monster := Monster{Character{
 		id:        c.ID,
 		name:      c.Name,
 		desc:      c.Desc,
@@ -27,5 +28,10 @@ func (c CharacterJSON) LoadMonster(la map[string]Ability, li map[string]Item) Mo
 		stats:     c.Stats,
 		items:     items,
 		abilities: abilities,
+		equipment: Equipment{},
 	}}
+
+	monster.Equip(items...)
+
+	return monster
 }

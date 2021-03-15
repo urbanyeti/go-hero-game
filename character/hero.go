@@ -8,7 +8,8 @@ type Hero struct {
 func NewHero(id string, name string, desc string) *Hero {
 	h := Hero{NewCharacter(id, name, desc)}
 	h.setDefaultStats()
-	h.items = make(Items)
+	h.items = []*Item{}
+	h.equipment = Equipment{}
 
 	return &h
 }

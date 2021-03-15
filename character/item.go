@@ -24,16 +24,16 @@ type Item struct {
 	tags  Tags
 }
 
-type Items map[string]*Item
+type Equipment map[string]*Item
 
 // LoadItem generates an Item object from the DTO
-func (i ItemJSON) LoadItem() Item {
+func (i ItemJSON) LoadItem() *Item {
 	tags := make(Tags)
 	for _, v := range i.Tags {
 		tags[v] = true
 	}
 
-	return Item{
+	return &Item{
 		id:    i.ID,
 		name:  i.Name,
 		desc:  i.Desc,
