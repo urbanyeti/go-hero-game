@@ -57,6 +57,26 @@ func (c *Character) HP() int {
 	return c.hp
 }
 
+// Def calculates the character's defense stat
+func (c *Character) Def() int {
+	def := c.Stat("def") + c.Stat("lvl")
+	for _, e := range c.equipment {
+		def += e.StatTry("def")
+	}
+
+	return def
+}
+
+// Agi calculates the character's speed stat
+func (c *Character) Agi() int {
+	agi := c.Stat("agi")
+	for _, a := range c.equipment {
+		agi += a.StatTry("agi")
+	}
+
+	return agi
+}
+
 // AddStat adds to the specified Stat value
 func (c *Character) AddStat(statID string, value int) {
 	if stat, ok := c.stats[statID]; ok {
@@ -86,14 +106,30 @@ func (c *Character) Stat(statID string) int {
 	return 0
 }
 
+// Armor returns equipped armor
+func (c *Character) Armor() ([]*Item, bool) {
+	armor := []*Item{}
+	if item, ok := c.equipment["torso"]; ok {
+		armor = append(armor, item)
+	}
+	if item, ok := c.equipment["feet"]; ok {
+		armor = append(armor, item)
+	}
+
+	return armor, len(armor) > 0
+}
+
 // Weapons returns equipped weapons
 func (c *Character) Weapons() ([]*Item, bool) {
 	weapons := []*Item{}
 	if item, ok := c.equipment["arm-r"]; ok {
 		weapons = append(weapons, item)
-		return weapons, true
 	}
-	return nil, false
+	if item, ok := c.equipment["arm-l"]; ok {
+		weapons = append(weapons, item)
+	}
+
+	return weapons, len(weapons) > 0
 }
 
 // SetHP sets the character's HP to the specified value
@@ -161,5 +197,5 @@ func (c *Character) Equip(items ...*Item) {
 }
 
 func (c Character) String() string {
-	return fmt.Sprintf("%v - HP: %v | %v | %v | %v", c.name, c.hp, c.stats, c.abilities, c.items)
+	return fmt.Sprintf("%v - HP: %v | %v | %v | %v", c.name, c.hp, c.stats, c.abilities, c.equipment)
 }

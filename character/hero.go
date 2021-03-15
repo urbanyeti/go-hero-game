@@ -22,7 +22,7 @@ func (hero *Hero) setDefaultStats() {
 		"atk":      5,
 		"def":      5,
 		"eva":      0,
-		"spd":      5,
+		"agi":      5,
 		"lvl":      1,
 		"exp":      0,
 		"exp-next": 10,
@@ -35,6 +35,7 @@ func (hero *Hero) GainExp(exp int) {
 	totalExp := hero.Stat("exp") + exp
 	if totalExp >= hero.Stat("exp-next") {
 		hero.AddStat("lvl", totalExp/hero.Stat("exp-next"))
+		hero.AddStat("exp-next", totalExp/hero.Stat("exp-next"))
 		hero.SetStat("exp", totalExp%hero.Stat("exp-next"))
 	} else {
 		hero.AddStat("exp", exp)

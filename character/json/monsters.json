@@ -8,7 +8,7 @@
             "lvl": 1,
             "atk": 5,
             "def": 1,
-            "spd": 5,
+            "agi": 5,
             "exp": 2
         },
         "abilities" : ["attack-claw1"],
@@ -23,7 +23,7 @@
             "lvl": 1,
             "atk": 6,
             "def": 6,
-            "spd": 4,
+            "agi": 4,
             "exp": 4
         },
         "abilities" : ["attack-tongue1", "attack-spit1"],
@@ -38,7 +38,7 @@
             "lvl": 1,
             "atk": 10,
             "def": 5,
-            "spd": 3,
+            "agi": 2,
             "exp": 9
         },
         "abilities" : [],

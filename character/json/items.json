@@ -48,7 +48,7 @@
         "name": "Basic Leather Armor",
         "desc": "basic set of leather armor{s}",
         "stats": {
-            "spd": 5
+            "def": 3
         },
         "tags": ["item", "equip", "armor", "torso", "leather"]
     },
@@ -57,7 +57,7 @@
         "name": "Basic Boots",
         "desc": "pair{s} of basic boots",
         "stats": {
-            "spd": 1
+            "agi": 1
         },
         "tags": ["item", "equip", "armor", "feet", "boots"]
     }

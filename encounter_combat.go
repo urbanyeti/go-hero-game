@@ -20,6 +20,8 @@ type Fighter interface {
 	ID() string
 	Name() string
 	HP() int
+	Def() int
+	Agi() int
 	Stat(string) int
 	Weapons() ([]*character.Item, bool)
 	TakeDamage(int)
@@ -31,15 +33,17 @@ type Attack struct {
 	Damager  character.Damager
 	Target   Fighter
 	TargetID string
+	Agi      int
 	Spd      int
-	ExecSpd  int
 }
 
 // Start the fight
 func (encounter CombatEncounter) Start(game *Game) bool {
 	monsters := map[string]character.Monster{}
 	for i, c := range encounter.Monsters {
-		monsters[fmt.Sprint(c.ID(), i)] = c
+		m := c.Clone()
+		m.AddStat("lvl", (game.Loop-1)*2)
+		monsters[fmt.Sprint(m.ID(), i)] = m
 	}
 
 	log.WithFields(log.Fields{"hero": game.Hero, "monsters": monsters}).Info("combat started")
@@ -60,8 +64,8 @@ func (encounter CombatEncounter) Start(game *Game) bool {
 
 	for {
 		for _, a := range attacks {
-			a.Spd += a.Attacker.Stat("spd")
-			if a.Spd >= a.ExecSpd {
+			a.Agi += a.Attacker.Agi()
+			if a.Agi >= a.Spd {
 				// Execute attack
 				a.dealDamage()
 				if a.Target.HP() <= 0 {
@@ -83,9 +87,9 @@ func (encounter CombatEncounter) Start(game *Game) bool {
 					return false
 				}
 				damager = a.Attacker.SelectDamager()
-				a.Spd = 0
+				a.Agi = 0
 				a.Damager = damager
-				a.ExecSpd = damager.Stat("spd")
+				a.Spd = damager.Stat("spd")
 			}
 		}
 		time.Sleep(messageDelay * time.Millisecond)
@@ -93,9 +97,9 @@ func (encounter CombatEncounter) Start(game *Game) bool {
 }
 
 func (a Attack) dealDamage() {
-	baseDmg := a.Attacker.Stat("atk") + a.Target.Stat("lvl")
+	baseDmg := a.Attacker.Stat("atk") + a.Attacker.Stat("lvl")
 	rollDmg := rand.Intn(a.Damager.Stat("dmg-min")+a.Damager.Stat("dmg-max")) + (a.Damager.Stat("dmg-min"))
-	defenderDef := a.Target.Stat("def")
+	defenderDef := a.Target.Def()
 	totalDmg := math.MaxOf(baseDmg+rollDmg-defenderDef, 0)
 
 	a.Target.TakeDamage(totalDmg)

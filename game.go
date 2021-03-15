@@ -106,8 +106,7 @@ func (g *Game) LoadMonsters() {
 
 // SetDefaultEquipment initializes the default equipment for the hero
 func (g Game) SetDefaultEquipment(hero *character.Hero) {
-	hero.Equip(g.Items["item-sword1"])
-	hero.Equip(g.Items["item-boots1"])
+	hero.Equip(g.Items["item-sword1"], g.Items["item-armor1"], g.Items["item-boots1"])
 }
 
 // PlayTurn plays out the next Game turn

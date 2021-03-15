@@ -67,6 +67,15 @@ func (item *Item) Stat(statID string) int {
 	return 0
 }
 
+// Stat retrieves the current stat value
+func (item *Item) StatTry(statID string) int {
+	if stat, ok := item.stats[statID]; ok {
+		return stat
+	}
+
+	return 0
+}
+
 // HasTag confirms whether the item has the specified tag
 func (item *Item) HasTag(id string) bool {
 	if _, ok := item.tags[id]; ok {
