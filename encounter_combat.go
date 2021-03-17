@@ -81,6 +81,7 @@ func (encounter CombatEncounter) Start(game *Game) bool {
 						a.TargetID, keys = keys[0], keys[1:]
 						targetM := monsters[target]
 						a.Target = &targetM
+						continue
 					}
 
 					log.WithFields(log.Fields{"hero": game.Hero.ID()}).Info("combat finished")
