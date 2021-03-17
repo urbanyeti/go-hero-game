@@ -83,8 +83,14 @@ func (c *Character) AddStat(statID string, value int) {
 		c.stats[statID] = math.MaxOf(stat+value, 1)
 		log.WithFields(log.Fields{"character": c.id, "stat": statID, "old": stat, "new": c.stats[statID]}).Info("stat modified")
 	} else {
-		log.WithFields(log.Fields{"statID": statID}).Warn("cannot add missing stat '%v'", statID)
+		log.WithFields(log.Fields{"statID": statID}).Warn("cannot add missing stat")
 	}
+}
+
+// AddItem adds the specified item to the character
+func (c *Character) AddItem(item *Item) {
+	c.items = append(c.items, item)
+	log.WithFields(log.Fields{"item": item.id, "character": c.id}).Info("added item")
 }
 
 // SetStat sets the specified Stat value
@@ -92,7 +98,7 @@ func (c *Character) SetStat(statID string, value int) {
 	if _, ok := c.stats[statID]; ok {
 		c.stats[statID] = value
 	} else {
-		log.WithFields(log.Fields{"statID": statID}).Warn("cannot set missing stat '%v'", statID)
+		log.WithFields(log.Fields{"statID": statID}).Warn("cannot set missing stat")
 	}
 }
 
@@ -102,7 +108,7 @@ func (c *Character) Stat(statID string) int {
 		return stat
 	}
 
-	log.WithFields(log.Fields{"statID": statID}).Warn("cannot retrieve missing stat '%v'", statID)
+	log.WithFields(log.Fields{"statID": statID}).Warn("cannot retrieve missing stat")
 	return 0
 }
 

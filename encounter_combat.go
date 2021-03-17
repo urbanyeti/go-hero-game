@@ -76,6 +76,7 @@ func (encounter CombatEncounter) Start(game *Game) bool {
 
 					log.WithFields(log.Fields{"hero": game.Hero.ID(), "monster": a.Target.ID()}).Info("monster slain")
 					game.Hero.GainExp(a.Target.Stat("exp"))
+					game.Hero.AddItem(game.Items.GetRandomItem())
 					delete(monsters, a.TargetID)
 					if len(keys) > 0 {
 						a.TargetID, keys = keys[0], keys[1:]

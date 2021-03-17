@@ -20,7 +20,7 @@ type Game struct {
 	Encounters []Encounter
 	Monsters   map[string]character.Monster
 	Abilities  map[string]character.Ability
-	Items      map[string]*character.Item
+	Items      character.LoadedItems
 }
 
 func (g Game) String() string {
@@ -105,7 +105,7 @@ func (g *Game) LoadMonsters() {
 }
 
 // SetDefaultEquipment initializes the default equipment for the hero
-func (g Game) SetDefaultEquipment(hero *character.Hero) {
+func (g *Game) SetDefaultEquipment(hero *character.Hero) {
 	hero.Equip(g.Items["item-sword1"], g.Items["item-armor1"], g.Items["item-boots1"])
 }
 

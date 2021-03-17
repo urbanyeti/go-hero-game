@@ -2,6 +2,7 @@ package character
 
 import (
 	"fmt"
+	"math/rand"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -24,6 +25,7 @@ type Item struct {
 	tags  Tags
 }
 
+type LoadedItems map[string]*Item
 type Equipment map[string]*Item
 
 // LoadItem generates an Item object from the DTO
@@ -82,6 +84,32 @@ func (item *Item) HasTag(id string) bool {
 		return true
 	}
 	return false
+}
+
+func (li LoadedItems) GetRandomItem() *Item {
+	random := rand.Intn((len(li)))
+	i := 0
+	for _, v := range li {
+		if i == random {
+			return v.Clone()
+		}
+		i++
+	}
+	return &Item{}
+}
+
+func (i Item) Clone() *Item {
+	n := i
+	n.stats = make(Stats, len(i.stats))
+	for k, v := range i.stats {
+		n.stats[k] = v
+	}
+	n.tags = make(Tags, len(i.tags))
+	for k, v := range i.tags {
+		n.tags[k] = v
+	}
+
+	return &n
 }
 
 func (item Item) String() string {
