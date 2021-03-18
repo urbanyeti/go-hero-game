@@ -77,6 +77,16 @@ func (c *Character) Agi() int {
 	return agi
 }
 
+// Eva calculates the character's evasion stat
+func (c *Character) Eva() int {
+	eva := c.Stat("eva")
+	for _, a := range c.equipment {
+		eva += a.StatTry("eva")
+	}
+
+	return eva
+}
+
 // AddStat adds to the specified Stat value
 func (c *Character) AddStat(statID string, value int) {
 	if stat, ok := c.stats[statID]; ok {

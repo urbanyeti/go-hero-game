@@ -57,7 +57,8 @@
         "name": "Basic Boots",
         "desc": "pair{s} of basic boots",
         "stats": {
-            "agi": 1
+            "agi": 1,
+            "eva": 1
         },
         "tags": ["item", "equip", "armor", "feet", "boots"]
     }

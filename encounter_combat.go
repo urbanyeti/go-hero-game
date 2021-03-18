@@ -22,6 +22,7 @@ type Fighter interface {
 	HP() int
 	Def() int
 	Agi() int
+	Eva() int
 	Stat(string) int
 	Weapons() ([]*character.Item, bool)
 	TakeDamage(int)
@@ -67,6 +68,13 @@ func (encounter CombatEncounter) Start(game *Game) bool {
 			a.Agi += a.Attacker.Agi()
 			if a.Agi >= a.Spd {
 				// Execute attack
+				r := rand.Float64()
+				if r < (float64(a.Target.Eva()) / 100) {
+					// Target evades attack
+					log.WithFields(log.Fields{"attack": a}).Info("attack evaded")
+					continue
+				}
+
 				a.dealDamage()
 				if a.Target.HP() <= 0 {
 					if _, isHero := a.Target.(*character.Hero); isHero {
