@@ -21,36 +21,41 @@ func main() {
 	if len(os.Args) > 1 {
 		contentType := os.Args[1]
 		if contentType == "item" || contentType == "items" || contentType == "i" {
-			SaveItems()
+			SaveItems(OpenFile())
 		} else if contentType == "monster" || contentType == "monsters" || contentType == "m" {
-			SaveMonsters()
+			SaveMonsters(OpenFile())
 		}
 	} else {
-		SaveItems()
-		SaveMonsters()
+		f := OpenFile()
+		SaveItems(f)
+		SaveMonsters(f)
 	}
 
 	os.Exit(0)
 }
 
-func SaveItems() {
-	log.Info("saving items")
-	f, err := excelize.OpenFile("./items.xlsx")
+func OpenFile() *excelize.File {
+	f, err := excelize.OpenFile("./content.xlsx")
 	ExitIfError(err)
+	return f
+}
+
+func SaveItems(f *excelize.File) {
+	log.Info("saving items")
 	items := []*character.ItemJSON{}
 	items = append(items, LoadItems(f, "weapons")...)
 	items = append(items, LoadItems(f, "armor")...)
-	err = Save("../character/json/items.json", items)
+	err := Save("../character/json/items.json", items)
+	ExitIfError(err)
 	log.Info("items saved")
 }
 
-func SaveMonsters() {
+func SaveMonsters(f *excelize.File) {
 	log.Info("saving monsters")
-	f, err := excelize.OpenFile("./characters.xlsx")
-	ExitIfError(err)
 	monsters := []*character.CharacterJSON{}
 	monsters = append(monsters, LoadCharacters(f, "monsters")...)
-	err = Save("../character/json/monsters.json", monsters)
+	err := Save("../character/json/monsters.json", monsters)
+	ExitIfError(err)
 	log.Info("monsters saved")
 }
 
