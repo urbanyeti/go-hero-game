@@ -15,7 +15,7 @@ type Encounter interface {
 
 // A CutsceneEncounter consists of dialogue and stat changes
 type CutsceneEncounter struct {
-	Description string
+	Descriptions []string
 }
 
 // Start the CutsceneEncounter

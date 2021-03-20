@@ -42,15 +42,13 @@ func (g *Game) Init() {
 	g.Hero = character.NewHero("hero-dan", "Dan", "cool hero")
 	g.SetDefaultEquipment(g.Hero)
 
-	g.Encounters = []Encounter{
-		CutsceneEncounter{"A sppooky encounter..."},
-		CutsceneEncounter{"A magical gift!"},
-		CutsceneEncounter{"A random act of chaos"},
+	g.Encounters = []Encounter{}
+	g.Encounters = append(g.Encounters, CutsceneEncounter{[]string{"A sppooky encounter...", "A random act of chaos", "A magical experience"}})
+	monsters := []character.Monster{}
+	for _, m := range g.Monsters {
+		monsters = append(monsters, m)
 	}
-
-	for _, monster := range g.Monsters {
-		g.Encounters = append(g.Encounters, CombatEncounter{[]character.Monster{monster}})
-	}
+	g.Encounters = append(g.Encounters, CombatEncounter{monsters})
 }
 
 // LoadAbilities grabs all the abilities from json

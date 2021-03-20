@@ -49,5 +49,22 @@
 			"ranged",
 			"acid"
 		]
+	},
+	{
+		"id": "attack-stomp1",
+		"name": "Stomp",
+		"desc": "destroy{!s} the ground with a fierce stomp",
+		"stats": {
+			"dmg-max": 12,
+			"dmg-min": 1,
+			"spd": 120
+		},
+		"tags": [
+			"ability",
+			"action",
+			"attack",
+			"ranged",
+			"physical"
+		]
 	}
 ]

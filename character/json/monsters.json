@@ -66,5 +66,29 @@
 		"items": [
 			"item-club1"
 		]
+	},
+	{
+		"id": "monster-giant",
+		"name": "Giant",
+		"desc": "giant{s}",
+		"tags": [
+			"character",
+			"monster",
+			"giant"
+		],
+		"hp": 30,
+		"stats": {
+			"agi": 1,
+			"atk": 20,
+			"def": 10,
+			"exp": 20,
+			"lvl": 6
+		},
+		"items": [
+			"item-club2"
+		],
+		"abilities": [
+			"attack-stomp1"
+		]
 	}
 ]

@@ -35,6 +35,23 @@
 		]
 	},
 	{
+		"id": "item-sword2",
+		"name": "Fine Sword",
+		"desc": "fine steel sword{s}",
+		"stats": {
+			"dmg-max": 4,
+			"dmg-min": 2,
+			"spd": 80
+		},
+		"tags": [
+			"item",
+			"equip",
+			"weapon",
+			"arm",
+			"sword"
+		]
+	},
+	{
 		"id": "item-dagger1",
 		"name": "Small Dagger",
 		"desc": "small steel dagger{s}",
@@ -71,6 +88,24 @@
 		]
 	},
 	{
+		"id": "item-club2",
+		"name": "Expert Club",
+		"desc": "expertly-crafted club{s}",
+		"stats": {
+			"dmg-max": 5,
+			"dmg-min": 3,
+			"spd": 90
+		},
+		"tags": [
+			"item",
+			"equip",
+			"weapon",
+			"arm",
+			"heavy",
+			"club"
+		]
+	},
+	{
 		"id": "item-armor1",
 		"name": "Basic Leather Armor",
 		"desc": "basic set of leather armor{s}",
@@ -86,11 +121,43 @@
 		]
 	},
 	{
+		"id": "item-armor2",
+		"name": "Fine Leather Armor",
+		"desc": "fine set of leather armor{s}",
+		"stats": {
+			"def": 4
+		},
+		"tags": [
+			"item",
+			"equip",
+			"armor",
+			"torso",
+			"leather"
+		]
+	},
+	{
 		"id": "item-boots1",
 		"name": "Basic Boots",
 		"desc": "pair{s} of basic boots",
 		"stats": {
 			"agi": 1,
+			"eva": 1
+		},
+		"tags": [
+			"item",
+			"equip",
+			"armor",
+			"feet",
+			"boots"
+		]
+	},
+	{
+		"id": "item-boots2",
+		"name": "Fine Boots",
+		"desc": "pair{s} of fine boots",
+		"stats": {
+			"agi": 1,
+			"def": 1,
 			"eva": 1
 		},
 		"tags": [

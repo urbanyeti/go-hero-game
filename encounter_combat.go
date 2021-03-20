@@ -41,10 +41,13 @@ type Attack struct {
 // Start the fight
 func (encounter CombatEncounter) Start(game *Game) bool {
 	monsters := map[string]character.Monster{}
-	for i, c := range encounter.Monsters {
+	for _, c := range encounter.Monsters {
+		if c.Stat("lvl") > game.Loop {
+			continue
+		}
 		m := c.Clone()
 		m.AddStat("lvl", (game.Loop-1)*2)
-		monsters[fmt.Sprint(m.ID(), i)] = m
+		monsters[fmt.Sprint(m.ID(), len(monsters))] = m
 	}
 
 	log.WithFields(log.Fields{"hero": game.Hero, "monsters": monsters}).Info("combat started")
