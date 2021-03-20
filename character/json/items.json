@@ -1,65 +1,104 @@
 [
-    {
-        "id": "item-goblinsword1",
-        "name": "Goblin Sword",
-        "desc": "crappy goblin-made sword{s}",
-        "stats": {
-            "dmg-min": 1,
-            "dmg-max": 3,
-            "spd": 80
-        },
-        "tags": ["item", "equip", "weapon", "arm", "sword", "goblin"]
-    },
-    {
-        "id": "item-sword1",
-        "name": "Basic Sword",
-        "desc": "basic steel sword{s}",
-        "stats": {
-            "dmg-min": 1,
-            "dmg-max": 4,
-            "spd": 80
-        },
-        "tags": ["item", "equip", "weapon", "arm", "sword"]
-    },
-    {
-        "id": "item-dagger1",
-        "name": "Small Dagger",
-        "desc": "small steel dagger{s}",
-        "stats": {
-            "dmg-min": 2,
-            "dmg-max": 2,
-            "spd": 50
-        },
-        "tags": ["item", "equip", "weapon", "arm", "light", "dagger"]
-    },
-    {
-        "id": "item-club1",
-        "name": "Giant Club",
-        "desc": "tree-sized club{s}",
-        "stats": {
-            "dmg-min": 3,
-            "dmg-max": 5,
-            "spd": 100
-        },
-        "tags": ["item", "equip", "weapon", "arm", "heavy", "club"]
-    },
-    {
-        "id": "item-armor1",
-        "name": "Basic Leather Armor",
-        "desc": "basic set of leather armor{s}",
-        "stats": {
-            "def": 3
-        },
-        "tags": ["item", "equip", "armor", "torso", "leather"]
-    },
-    {
-        "id": "item-boots1",
-        "name": "Basic Boots",
-        "desc": "pair{s} of basic boots",
-        "stats": {
-            "agi": 1,
-            "eva": 1
-        },
-        "tags": ["item", "equip", "armor", "feet", "boots"]
-    }
+	{
+		"ID": "item-goblinsword1",
+		"Name": "Goblin Sword",
+		"Desc": "crappy goblin-made sword{s}",
+		"Stats": {
+			"dmg-max": 3,
+			"dmg-min": 1,
+			"spd": 80
+		},
+		"Tags": [
+			"item",
+			"equip",
+			"weapon",
+			"arm",
+			"sword",
+			"goblin"
+		]
+	},
+	{
+		"ID": "item-sword1",
+		"Name": "Basic Sword",
+		"Desc": "basic steel sword{s}",
+		"Stats": {
+			"dmg-max": 4,
+			"dmg-min": 1,
+			"spd": 80
+		},
+		"Tags": [
+			"item",
+			"equip",
+			"weapon",
+			"arm",
+			"sword"
+		]
+	},
+	{
+		"ID": "item-dagger1",
+		"Name": "Small Dagger",
+		"Desc": "small steel dagger{s}",
+		"Stats": {
+			"dmg-max": 2,
+			"dmg-min": 2,
+			"spd": 50
+		},
+		"Tags": [
+			"item",
+			"equip",
+			"weapon",
+			"arm",
+			"light",
+			"dagger"
+		]
+	},
+	{
+		"ID": "item-club1",
+		"Name": "Giant Club",
+		"Desc": "tree-sized club{s}",
+		"Stats": {
+			"dmg-max": 5,
+			"dmg-min": 3,
+			"spd": 100
+		},
+		"Tags": [
+			"item",
+			"equip",
+			"weapon",
+			"arm",
+			"heavy",
+			"club"
+		]
+	},
+	{
+		"ID": "item-armor1",
+		"Name": "Basic Leather Armor",
+		"Desc": "basic set of leather armor{s}",
+		"Stats": {
+			"def": 3
+		},
+		"Tags": [
+			"item",
+			"equip",
+			"armor",
+			"torso",
+			"leather"
+		]
+	},
+	{
+		"ID": "item-boots1",
+		"Name": "Basic Boots",
+		"Desc": "pair{s} of basic boots",
+		"Stats": {
+			"agi": 1,
+			"eva": 1
+		},
+		"Tags": [
+			"item",
+			"equip",
+			"armor",
+			"feet",
+			"boots"
+		]
+	}
 ]
