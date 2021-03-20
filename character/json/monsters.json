@@ -1,47 +1,70 @@
 [
-    {
-        "id": "monster-goblin",
-        "name": "Goblin",
-        "desc": "gross little goblin{s}",
-        "hp": 10,
-        "stats": {
-            "lvl": 1,
-            "atk": 5,
-            "def": 1,
-            "agi": 5,
-            "exp": 2
-        },
-        "abilities" : ["attack-claw1"],
-        "items" : ["item-goblinsword1"]
-    },
-    {
-        "id": "monster-frog",
-        "name": "Giant Frog",
-        "desc": "oversized frog{s}",
-        "hp": 8,
-        "stats": {
-            "lvl": 1,
-            "atk": 6,
-            "def": 6,
-            "agi": 4,
-            "exp": 4
-        },
-        "abilities" : ["attack-tongue1", "attack-spit1"],
-        "items" : []
-    },
-    {
-        "id": "monster-troll",
-        "name": "Troll",
-        "desc": "fearsome troll{s}",
-        "hp": 22,
-        "stats": {
-            "lvl": 1,
-            "atk": 10,
-            "def": 5,
-            "agi": 2,
-            "exp": 9
-        },
-        "abilities" : [],
-        "items" : ["item-club1"]
-    }
+	{
+		"id": "monster-goblin",
+		"name": "Goblin",
+		"desc": "gross little goblin{s}",
+		"tags": [
+			"character",
+			"monster",
+			"goblin"
+		],
+		"hp": 10,
+		"stats": {
+			"agi": 5,
+			"atk": 5,
+			"def": 1,
+			"exp": 2,
+			"lvl": 1
+		},
+		"items": [
+			"item-goblinsword1"
+		],
+		"abilities": [
+			"attack-claw1"
+		]
+	},
+	{
+		"id": "monster-frog",
+		"name": "Giant Frog",
+		"desc": "oversized frog{s}",
+		"tags": [
+			"character",
+			"monster",
+			"beast",
+			"frog"
+		],
+		"hp": 8,
+		"stats": {
+			"agi": 4,
+			"atk": 6,
+			"def": 6,
+			"exp": 4,
+			"lvl": 1
+		},
+		"abilities": [
+			"attack-tongue1",
+			"attack-spit1"
+		]
+	},
+	{
+		"id": "monster-troll",
+		"name": "Troll",
+		"desc": "fearsome troll{s}",
+		"tags": [
+			"character",
+			"monster",
+			"troll"
+		],
+		"hp": 22,
+		"stats": {
+			"agi": 2,
+			"atk": 10,
+			"def": 5,
+			"exp": 9,
+			"lvl": 2
+		},
+		"items": [
+			"item-club1"
+		]
+	}
 ]

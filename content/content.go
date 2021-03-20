@@ -22,9 +22,12 @@ func main() {
 		contentType := os.Args[1]
 		if contentType == "item" || contentType == "items" || contentType == "i" {
 			SaveItems()
+		} else if contentType == "monster" || contentType == "monsters" || contentType == "m" {
+			SaveMonsters()
 		}
 	} else {
 		SaveItems()
+		SaveMonsters()
 	}
 
 	os.Exit(0)
@@ -39,6 +42,16 @@ func SaveItems() {
 	items = append(items, LoadItems(f, "armor")...)
 	err = Save("../character/json/items.json", items)
 	log.Info("items saved")
+}
+
+func SaveMonsters() {
+	log.Info("saving monsters")
+	f, err := excelize.OpenFile("./characters.xlsx")
+	ExitIfError(err)
+	monsters := []*character.CharacterJSON{}
+	monsters = append(monsters, LoadCharacters(f, "monsters")...)
+	err = Save("../character/json/monsters.json", monsters)
+	log.Info("monsters saved")
 }
 
 func LoadItems(f *excelize.File, sheet string) []*character.ItemJSON {
@@ -56,7 +69,7 @@ func LoadItems(f *excelize.File, sheet string) []*character.ItemJSON {
 			ID:    row[0],
 			Name:  row[1],
 			Desc:  row[2],
-			Tags:  strings.Split(row[3], ","),
+			Tags:  SplitString(row[3]),
 			Stats: make(character.Stats, 6),
 		}
 
@@ -78,6 +91,67 @@ func LoadItems(f *excelize.File, sheet string) []*character.ItemJSON {
 	}
 
 	return items
+}
+
+func LoadCharacters(f *excelize.File, sheet string) []*character.CharacterJSON {
+	log.WithFields(logrus.Fields{"file": f.Path, "sheet": sheet}).Info("importing sheet of characters")
+	rows, err := f.GetRows(sheet)
+	ExitIfError(err)
+
+	characters := make([]*character.CharacterJSON, len(rows)-1)
+	for ri, row := range rows {
+		if ri == 0 {
+			continue
+		}
+
+		hp, err := strconv.Atoi(row[4])
+		if err != nil {
+			log.WithFields(log.Fields{"row": ri, "col": 4}).Error("can't convert cell")
+			continue
+		}
+		c := character.CharacterJSON{
+			ID:        row[0],
+			Name:      row[1],
+			Desc:      row[2],
+			Tags:      SplitString(row[3]),
+			HP:        hp,
+			Abilities: SplitString(row[5]),
+			Items:     SplitString(row[6]),
+			Stats:     make(character.Stats, 5),
+		}
+
+		for i := 7; i < 12; i++ {
+			header := rows[0][i]
+			if i >= len(row) || row[i] == "" {
+				continue
+			}
+			var val, err = strconv.Atoi(row[i])
+			if err != nil {
+				log.WithFields(log.Fields{"row": ri, "col": i}).Error("can't convert cell")
+				continue
+			}
+
+			c.Stats[header] = val
+		}
+
+		characters[ri-1] = &c
+	}
+
+	return characters
+}
+
+func SplitString(v string) []string {
+	if v == "" {
+		return nil
+	}
+
+	vals := strings.Split(strings.ReplaceAll(v, " ", ""), ",")
+
+	if len(vals) == 0 {
+		return nil
+	}
+
+	return vals
 }
 
 func Save(path string, v interface{}) error {

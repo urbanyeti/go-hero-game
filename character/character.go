@@ -22,13 +22,14 @@ type Character struct {
 }
 
 type CharacterJSON struct {
-	ID        string
-	Name      string
-	Desc      string
-	HP        int
-	Stats     map[string]int
-	Items     []string
-	Abilities []string
+	ID        string         `json:"id"`
+	Name      string         `json:"name"`
+	Desc      string         `json:"desc"`
+	Tags      []string       `json:"tags,omitempty"`
+	HP        int            `json:"hp"`
+	Stats     map[string]int `json:"stats,omitempty"`
+	Items     []string       `json:"items,omitempty"`
+	Abilities []string       `json:"abilities,omitempty"`
 }
 
 func NewCharacter(id string, name string, desc string) Character {

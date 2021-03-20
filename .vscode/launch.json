@@ -12,7 +12,7 @@
             "program": "${workspaceFolder}"
         },
         {
-            "name": "Load Content",
+            "name": "Save Content",
             "type": "go",
             "request": "launch",
             "mode": "debug",

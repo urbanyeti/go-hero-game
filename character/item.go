@@ -9,11 +9,11 @@ import (
 
 // ItemJSON is the DTO for items
 type ItemJSON struct {
-	ID    string
-	Name  string
-	Desc  string
-	Stats map[string]int
-	Tags  []string
+	ID    string         `json:"id"`
+	Name  string         `json:"name"`
+	Desc  string         `json:"desc"`
+	Stats map[string]int `json:"stats,omitempty"`
+	Tags  []string       `json:"tags,omitempty"`
 }
 
 // An Item is collected and may be used or equipped by a character

@@ -1,14 +1,14 @@
 [
 	{
-		"ID": "item-goblinsword1",
-		"Name": "Goblin Sword",
-		"Desc": "crappy goblin-made sword{s}",
-		"Stats": {
+		"id": "item-goblinsword1",
+		"name": "Goblin Sword",
+		"desc": "crappy goblin-made sword{s}",
+		"stats": {
 			"dmg-max": 3,
 			"dmg-min": 1,
 			"spd": 80
 		},
-		"Tags": [
+		"tags": [
 			"item",
 			"equip",
 			"weapon",
@@ -18,15 +18,15 @@
 		]
 	},
 	{
-		"ID": "item-sword1",
-		"Name": "Basic Sword",
-		"Desc": "basic steel sword{s}",
-		"Stats": {
+		"id": "item-sword1",
+		"name": "Basic Sword",
+		"desc": "basic steel sword{s}",
+		"stats": {
 			"dmg-max": 4,
 			"dmg-min": 1,
 			"spd": 80
 		},
-		"Tags": [
+		"tags": [
 			"item",
 			"equip",
 			"weapon",
@@ -35,15 +35,15 @@
 		]
 	},
 	{
-		"ID": "item-dagger1",
-		"Name": "Small Dagger",
-		"Desc": "small steel dagger{s}",
-		"Stats": {
+		"id": "item-dagger1",
+		"name": "Small Dagger",
+		"desc": "small steel dagger{s}",
+		"stats": {
 			"dmg-max": 2,
 			"dmg-min": 2,
 			"spd": 50
 		},
-		"Tags": [
+		"tags": [
 			"item",
 			"equip",
 			"weapon",
@@ -53,15 +53,15 @@
 		]
 	},
 	{
-		"ID": "item-club1",
-		"Name": "Giant Club",
-		"Desc": "tree-sized club{s}",
-		"Stats": {
+		"id": "item-club1",
+		"name": "Giant Club",
+		"desc": "tree-sized club{s}",
+		"stats": {
 			"dmg-max": 5,
 			"dmg-min": 3,
 			"spd": 100
 		},
-		"Tags": [
+		"tags": [
 			"item",
 			"equip",
 			"weapon",
@@ -71,13 +71,13 @@
 		]
 	},
 	{
-		"ID": "item-armor1",
-		"Name": "Basic Leather Armor",
-		"Desc": "basic set of leather armor{s}",
-		"Stats": {
+		"id": "item-armor1",
+		"name": "Basic Leather Armor",
+		"desc": "basic set of leather armor{s}",
+		"stats": {
 			"def": 3
 		},
-		"Tags": [
+		"tags": [
 			"item",
 			"equip",
 			"armor",
@@ -86,14 +86,14 @@
 		]
 	},
 	{
-		"ID": "item-boots1",
-		"Name": "Basic Boots",
-		"Desc": "pair{s} of basic boots",
-		"Stats": {
+		"id": "item-boots1",
+		"name": "Basic Boots",
+		"desc": "pair{s} of basic boots",
+		"stats": {
 			"agi": 1,
 			"eva": 1
 		},
-		"Tags": [
+		"tags": [
 			"item",
 			"equip",
 			"armor",
