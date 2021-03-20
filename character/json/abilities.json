@@ -1,35 +1,53 @@
 [
-    {
-        "id": "attack-claw1",
-        "name": "Claw Attack",
-        "desc": "swipe{!s} at {t} with their sharp claws",
-        "stats": {
-            "dmg-min": 1,
-            "dmg-max": 4,
-            "spd": 80
-        },
-        "tags": ["ability", "action", "attack", "melee", "physical"]
-    },
-    {
-        "id": "attack-tongue1",
-        "name": "Tongue Smack",
-        "desc": "smacks{!s} {t} with their tongue",
-        "stats": {
-            "dmg-min": 1,
-            "dmg-max": 4,
-            "spd": 80
-        },
-        "tags": ["ability", "action", "attack", "ranged", "physical"]
-    },
-    {
-        "id": "attack-spit1",
-        "name": "Acid Spit",
-        "desc": "spit{!s} acid at {t}",
-        "stats": {
-            "dmg-min": 4,
-            "dmg-max": 8,
-            "spd": 120
-        },
-        "tags": ["ability", "action", "attack", "ranged", "acid"]
-    }
+	{
+		"id": "attack-claw1",
+		"name": "Claw Attack",
+		"desc": "swipe{!s} at {t} with their sharp claws",
+		"stats": {
+			"dmg-max": 4,
+			"dmg-min": 1,
+			"spd": 80
+		},
+		"tags": [
+			"ability",
+			"action",
+			"attack",
+			"melee",
+			"physical"
+		]
+	},
+	{
+		"id": "attack-tongue1",
+		"name": "Tongue Smack",
+		"desc": "smacks{!s} {t} with their tongue",
+		"stats": {
+			"dmg-max": 4,
+			"dmg-min": 1,
+			"spd": 80
+		},
+		"tags": [
+			"ability",
+			"action",
+			"attack",
+			"ranged",
+			"physical"
+		]
+	},
+	{
+		"id": "attack-spit1",
+		"name": "Acid Spit",
+		"desc": "spit{!s} acid at {t}",
+		"stats": {
+			"dmg-max": 8,
+			"dmg-min": 4,
+			"spd": 120
+		},
+		"tags": [
+			"ability",
+			"action",
+			"attack",
+			"ranged",
+			"acid"
+		]
+	}
 ]

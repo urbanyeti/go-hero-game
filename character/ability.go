@@ -8,11 +8,11 @@ import (
 
 // AbilityJSON is the DTO for abilities
 type AbilityJSON struct {
-	ID    string
-	Name  string
-	Desc  string
-	Stats map[string]int
-	Tags  []string
+	ID    string         `json:"id"`
+	Name  string         `json:"name"`
+	Desc  string         `json:"desc"`
+	Stats map[string]int `json:"stats,omitempty"`
+	Tags  []string       `json:"tags,omitempty"`
 }
 
 // An Ability is a skill or effect that can be used by a character
