@@ -1,4 +1,4 @@
-package main
+package game
 
 import (
 	"encoding/json"
@@ -11,6 +11,12 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/urbanyeti/go-hero-game/character"
 )
+
+const loopTurns int = 10
+const maxTurns int = 100
+const messageDelay = 0
+const turnDelay = 200
+const loopDelay = 1000
 
 // Game contains state and data about the game session
 type Game struct {
@@ -27,12 +33,12 @@ func (g Game) String() string {
 	return fmt.Sprintf("Loop: %v Turn: %v | %v", g.Loop, g.Turn, g.Hero)
 }
 
-// LoadContent loads resources used by the Game
-func (g *Game) LoadContent() {
-	g.LoadAbilities()
-	g.LoadItems()
-	g.LoadMonsters()
-}
+// func (g *Game) GetRandomItem() {
+// 	request := grpc.ItemRequest{LoopNumber: int32(g.Loop), Level: (int32)(g.Hero.Stat("lvl"))}
+// 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+// 	defer cancel()
+// 	g.Server.GetRandomItem(ctx, &request)
+// }
 
 // Init sets up the Game
 func (g *Game) Init() {
@@ -49,6 +55,13 @@ func (g *Game) Init() {
 		monsters = append(monsters, m)
 	}
 	g.Encounters = append(g.Encounters, CombatEncounter{monsters})
+}
+
+// LoadContent loads resources used by the Game
+func (g *Game) LoadContent() {
+	g.LoadAbilities()
+	g.LoadItems()
+	g.LoadMonsters()
 }
 
 // LoadAbilities grabs all the abilities from json
