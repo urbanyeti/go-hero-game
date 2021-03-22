@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/urbanyeti/go-hero-game/server";
+option go_package = "github.com/urbanyeti/go-hero-game/grpc";
 
 package gameworld;
 

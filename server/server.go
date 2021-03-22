@@ -7,9 +7,10 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 
 	"github.com/urbanyeti/go-hero-game/game"
-	"github.com/urbanyeti/go-hero-game/server"
+	server "github.com/urbanyeti/go-hero-game/server/grpc"
 	grpc "google.golang.org/grpc"
 )
 
@@ -21,17 +22,17 @@ var (
 	port       = flag.Int("port", 10000, "The server port")
 )
 
-type GameWorld struct {
+type gameWorldServer struct {
 	server.UnimplementedGameWorldServer
 	g *game.Game
 }
 
-func (s *GameWorld) Init() {
+func (s *gameWorldServer) Init() {
 	s.g = &game.Game{}
 	s.g.Init()
 }
 
-func (s *GameWorld) GetRandomItem(context.Context, *server.ItemRequest) (*server.Item, error) {
+func (s *gameWorldServer) GetRandomItem(context.Context, *server.ItemRequest) (*server.Item, error) {
 	item := s.g.Items.GetRandomItem()
 	v, err := json.MarshalIndent(item, "", "\t")
 	if err != nil {
@@ -41,22 +42,16 @@ func (s *GameWorld) GetRandomItem(context.Context, *server.ItemRequest) (*server
 	return &server.Item{Data: v}, nil
 }
 
-func newServer() *server.GameWorld {
-	s := &server.GameWorld{}
+func newServer() *gameWorldServer {
+	s := &gameWorldServer{}
 	s.Init()
 	return s
 }
 
 func main() {
+	os.Chdir("..")
 	game := game.Game{}
 	game.Init()
-
-	// for i := 0; i < maxTurns; i++ {
-	// 	gameOver := game.PlayTurn()
-	// 	if gameOver {
-	// 		break
-	// 	}
-	// }
 
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
