@@ -24,6 +24,13 @@
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceFolder}/server/server.go"
+        },
+        {
+            "name": "Client",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/client/client.go"
         }
 
     ]

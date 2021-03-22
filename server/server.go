@@ -2,13 +2,13 @@ package main
 
 import (
 	context "context"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
 	"net"
 	"os"
 
+	"github.com/urbanyeti/go-hero-game/character"
 	"github.com/urbanyeti/go-hero-game/game"
 	server "github.com/urbanyeti/go-hero-game/server/grpc"
 	grpc "google.golang.org/grpc"
@@ -34,12 +34,22 @@ func (s *gameWorldServer) Init() {
 
 func (s *gameWorldServer) GetRandomItem(context.Context, *server.ItemRequest) (*server.Item, error) {
 	item := s.g.Items.GetRandomItem()
-	v, err := json.MarshalIndent(item, "", "\t")
-	if err != nil {
-		return nil, err
+
+	return itemResponse(item), nil
+}
+
+func itemResponse(item *character.Item) *server.Item {
+	r := &server.Item{}
+	r.ID = item.ID()
+	r.Name = item.Name()
+	r.Desc = item.Desc()
+	r.Tags = item.Tags
+	r.Stats = make(map[string]int32, len(item.Stats))
+	for k, v := range item.Stats {
+		r.Stats[k] = int32(v)
 	}
 
-	return &server.Item{Data: v}, nil
+	return r
 }
 
 func newServer() *gameWorldServer {

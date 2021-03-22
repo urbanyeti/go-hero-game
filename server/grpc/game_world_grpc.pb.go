@@ -97,5 +97,5 @@ var GameWorld_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "server/grpc/game_world.proto",
+	Metadata: "grpc/game_world.proto",
 }

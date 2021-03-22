@@ -21,8 +21,8 @@ type Item struct {
 	id    string
 	name  string
 	desc  string
-	stats Stats
-	tags  Tags
+	Stats Stats
+	Tags  Tags
 }
 
 type LoadedItems map[string]*Item
@@ -39,8 +39,8 @@ func (i ItemJSON) LoadItem() *Item {
 		id:    i.ID,
 		name:  i.Name,
 		desc:  i.Desc,
-		stats: i.Stats,
-		tags:  tags,
+		Stats: i.Stats,
+		Tags:  tags,
 	}
 }
 
@@ -61,7 +61,7 @@ func (i *Item) Desc() string {
 
 // Stat retrieves the current stat value
 func (item *Item) Stat(statID string) int {
-	if stat, ok := item.stats[statID]; ok {
+	if stat, ok := item.Stats[statID]; ok {
 		return stat
 	}
 
@@ -71,7 +71,7 @@ func (item *Item) Stat(statID string) int {
 
 // Stat retrieves the current stat value
 func (item *Item) StatTry(statID string) int {
-	if stat, ok := item.stats[statID]; ok {
+	if stat, ok := item.Stats[statID]; ok {
 		return stat
 	}
 
@@ -80,7 +80,7 @@ func (item *Item) StatTry(statID string) int {
 
 // HasTag confirms whether the item has the specified tag
 func (item *Item) HasTag(id string) bool {
-	if _, ok := item.tags[id]; ok {
+	if _, ok := item.Tags[id]; ok {
 		return true
 	}
 	return false
@@ -100,13 +100,13 @@ func (li LoadedItems) GetRandomItem() *Item {
 
 func (i Item) Clone() *Item {
 	n := i
-	n.stats = make(Stats, len(i.stats))
-	for k, v := range i.stats {
-		n.stats[k] = v
+	n.Stats = make(Stats, len(i.Stats))
+	for k, v := range i.Stats {
+		n.Stats[k] = v
 	}
-	n.tags = make(Tags, len(i.tags))
-	for k, v := range i.tags {
-		n.tags[k] = v
+	n.Tags = make(Tags, len(i.Tags))
+	for k, v := range i.Tags {
+		n.Tags[k] = v
 	}
 
 	return &n

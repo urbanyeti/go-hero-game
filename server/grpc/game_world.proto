@@ -14,5 +14,9 @@ message ItemRequest {
 }
 
 message Item {
-	bytes data = 1;
+	string ID = 1;
+	string Name = 2;
+	string Desc = 3;
+	map<string,int32> Stats = 4;
+	map<string,bool> Tags = 5;
 }

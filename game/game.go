@@ -34,7 +34,7 @@ func (g Game) String() string {
 }
 
 // func (g *Game) GetRandomItem() {
-// 	request := grpc.ItemRequest{LoopNumber: int32(g.Loop), Level: (int32)(g.Hero.Stat("lvl"))}
+// 	request := grpc.ItemRequest{LoopNumber: int(g.Loop), Level: (int)(g.Hero.Stat("lvl"))}
 // 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 // 	defer cancel()
 // 	g.Server.GetRandomItem(ctx, &request)

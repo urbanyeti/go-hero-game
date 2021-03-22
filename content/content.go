@@ -101,7 +101,7 @@ func LoadAbilities(f *excelize.File, sheet string) []*character.AbilityJSON {
 				continue
 			}
 
-			ability.Stats[header] = val
+			ability.Stats[header] = (int)(val)
 		}
 
 		abilities[ri-1] = &ability
@@ -140,7 +140,7 @@ func LoadItems(f *excelize.File, sheet string) []*character.ItemJSON {
 				continue
 			}
 
-			item.Stats[header] = val
+			item.Stats[header] = (int)(val)
 		}
 
 		items[ri-1] = &item
@@ -170,7 +170,7 @@ func LoadCharacters(f *excelize.File, sheet string) []*character.CharacterJSON {
 			Name:      row[1],
 			Desc:      row[2],
 			Tags:      SplitString(row[3]),
-			HP:        hp,
+			HP:        int(hp),
 			Abilities: SplitString(row[5]),
 			Items:     SplitString(row[6]),
 			Stats:     make(character.Stats, 5),
@@ -187,7 +187,7 @@ func LoadCharacters(f *excelize.File, sheet string) []*character.CharacterJSON {
 				continue
 			}
 
-			c.Stats[header] = val
+			c.Stats[header] = int(val)
 		}
 
 		characters[ri-1] = &c
