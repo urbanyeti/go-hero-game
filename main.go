@@ -12,7 +12,7 @@ const loopDelay = 1000
 
 func main() {
 	game := game.Game{}
-	game.Init()
+	game.Initialize()
 
 	for i := 0; i < maxTurns; i++ {
 		gameOver := game.PlayTurn()

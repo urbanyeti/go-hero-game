@@ -40,8 +40,8 @@ func (g Game) String() string {
 // 	g.Server.GetRandomItem(ctx, &request)
 // }
 
-// Init sets up the Game
-func (g *Game) Init() {
+// Initialize sets up the Game
+func (g *Game) Initialize() {
 	g.LoadContent()
 	g.Loop = 1
 	g.Turn = 1

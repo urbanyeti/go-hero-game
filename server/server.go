@@ -12,14 +12,14 @@ import (
 	"github.com/urbanyeti/go-hero-game/game"
 	server "github.com/urbanyeti/go-hero-game/server/grpc"
 	grpc "google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 )
 
 var (
-	tls        = flag.Bool("tls", false, "Connection uses TLS if true, else plain TCP")
-	certFile   = flag.String("cert_file", "", "The TLS cert file")
-	keyFile    = flag.String("key_file", "", "The TLS key file")
-	jsonDBFile = flag.String("json_db_file", "", "A json file containing a list of features")
-	port       = flag.Int("port", 10000, "The server port")
+	tls      = flag.Bool("tls", true, "Connection uses TLS if true, else plain TCP")
+	certFile = flag.String("cert_file", "x509/localhost.crt", "The TLS cert file")
+	keyFile  = flag.String("key_file", "x509/localhost.key", "The TLS key file")
+	port     = flag.Int("port", 10000, "The server port")
 )
 
 type gameWorldServer struct {
@@ -27,9 +27,9 @@ type gameWorldServer struct {
 	g *game.Game
 }
 
-func (s *gameWorldServer) Init() {
+func (s *gameWorldServer) Initialize() {
 	s.g = &game.Game{}
-	s.g.Init()
+	s.g.Initialize()
 }
 
 func (s *gameWorldServer) GetRandomItem(context.Context, *server.ItemRequest) (*server.Item, error) {
@@ -54,14 +54,14 @@ func itemResponse(item *character.Item) *server.Item {
 
 func newServer() *gameWorldServer {
 	s := &gameWorldServer{}
-	s.Init()
+	s.Initialize()
 	return s
 }
 
 func main() {
 	os.Chdir("..")
 	game := game.Game{}
-	game.Init()
+	game.Initialize()
 
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
@@ -69,6 +69,13 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	var opts []grpc.ServerOption
+	if *tls {
+		creds, err := credentials.NewServerTLSFromFile(*certFile, *keyFile)
+		if err != nil {
+			log.Fatalf("Failed to generate credentials %v", err)
+		}
+		opts = []grpc.ServerOption{grpc.Creds(creds)}
+	}
 	grpcServer := grpc.NewServer(opts...)
 	server.RegisterGameWorldServer(grpcServer, newServer())
 	grpcServer.Serve(lis)
