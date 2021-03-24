@@ -20,15 +20,21 @@ func (c CharacterJSON) LoadMonster(la map[string]Ability, li map[string]*Item) M
 		items = append(items, value)
 	}
 
+	tags := make(Tags)
+	for _, v := range c.Tags {
+		tags[v] = true
+	}
+
 	monster := Monster{Character{
 		id:        c.ID,
 		name:      c.Name,
 		desc:      c.Desc,
+		Tags:      tags,
 		hp:        c.HP,
-		stats:     c.Stats,
-		items:     items,
-		abilities: abilities,
-		equipment: Equipment{},
+		Stats:     c.Stats,
+		Items:     items,
+		Abilities: abilities,
+		Equipment: Equipment{},
 	}}
 
 	monster.Equip(items...)
@@ -38,20 +44,20 @@ func (c CharacterJSON) LoadMonster(la map[string]Ability, li map[string]*Item) M
 
 func (m Monster) Clone() Monster {
 	n := m
-	n.stats = make(Stats, len(m.stats))
-	for k, v := range m.stats {
-		n.stats[k] = v
+	n.Stats = make(Stats, len(m.Stats))
+	for k, v := range m.Stats {
+		n.Stats[k] = v
 	}
-	n.abilities = make(Abilities, len(m.abilities))
-	for k, v := range m.abilities {
-		n.abilities[k] = v
+	n.Abilities = make(Abilities, len(m.Abilities))
+	for k, v := range m.Abilities {
+		n.Abilities[k] = v
 	}
-	n.equipment = make(Equipment, len(m.equipment))
-	for k, v := range m.equipment {
-		n.equipment[k] = v
+	n.Equipment = make(Equipment, len(m.Equipment))
+	for k, v := range m.Equipment {
+		n.Equipment[k] = v
 	}
-	n.items = make([]*Item, len(m.items))
-	copy(n.items, m.items)
+	n.Items = make([]*Item, len(m.Items))
+	copy(n.Items, m.Items)
 
 	return n
 }

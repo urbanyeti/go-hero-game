@@ -1,7 +1,7 @@
 package main
 
 import (
-	context "context"
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -9,7 +9,7 @@ import (
 	"os"
 
 	"github.com/urbanyeti/go-hero-game/game"
-	pb "github.com/urbanyeti/go-hero-game/server/grpc"
+	pb "github.com/urbanyeti/go-hero-game/grpc"
 	grpc "google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
@@ -31,10 +31,22 @@ func (s *gameWorldServer) Initialize() {
 	s.g.Initialize()
 }
 
-func (s *gameWorldServer) GetRandomItem(context.Context, *pb.ItemRequest) (*pb.Item, error) {
+func (s *gameWorldServer) GetRandomItem(ctx context.Context, r *pb.ItemRequest) (*pb.Item, error) {
 	item := s.g.Items.GetRandomItem()
 
 	return pb.PackItem(item), nil
+}
+
+func (s *gameWorldServer) GetMonsters(r *pb.MonsterRequest, stream pb.GameWorld_GetMonstersServer) error {
+	for _, c := range s.g.Monsters {
+		if c.Stat("lvl") <= int(r.LoopNumber) {
+			if err := stream.Send(pb.PackMonster(&c)); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }
 
 func newServer() *gameWorldServer {

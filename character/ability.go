@@ -20,8 +20,8 @@ type Ability struct {
 	id    string
 	name  string
 	desc  string
-	stats Stats
-	tags  Tags
+	Stats Stats
+	Tags  Tags
 }
 
 type Abilities map[string]*Ability
@@ -37,8 +37,8 @@ func (a AbilityJSON) LoadAbility() Ability {
 		id:    a.ID,
 		name:  a.Name,
 		desc:  a.Desc,
-		stats: a.Stats,
-		tags:  tags,
+		Stats: a.Stats,
+		Tags:  tags,
 	}
 }
 
@@ -59,7 +59,7 @@ func (a *Ability) Desc() string {
 
 // Stat retrieves the current stat value
 func (ability *Ability) Stat(statID string) int {
-	if stat, ok := ability.stats[statID]; ok {
+	if stat, ok := ability.Stats[statID]; ok {
 		return stat
 	}
 
@@ -69,7 +69,7 @@ func (ability *Ability) Stat(statID string) int {
 
 // HasTag confirms whether the ability has the specified tag
 func (ability *Ability) HasTag(id string) bool {
-	if _, ok := ability.tags[id]; ok {
+	if _, ok := ability.Tags[id]; ok {
 		return true
 	}
 	return false

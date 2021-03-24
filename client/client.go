@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"flag"
+	"io"
 	"time"
 
 	log "github.com/sirupsen/logrus"
-	pb "github.com/urbanyeti/go-hero-game/server/grpc"
+	pb "github.com/urbanyeti/go-hero-game/grpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
@@ -29,6 +30,27 @@ func getRandomItem(client pb.GameWorldClient, req *pb.ItemRequest) {
 	log.Println(i)
 }
 
+func getMonsters(client pb.GameWorldClient, req *pb.MonsterRequest) {
+	log.WithFields(log.Fields{"request": req, "client": client}).Info("getting monsters")
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	stream, err := client.GetMonsters(ctx, req)
+	if err != nil {
+		log.WithFields(log.Fields{"client": client, "error": err}).Fatal("GetMonsters")
+	}
+	for {
+		monster, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.WithFields(log.Fields{"client": client, "error": err}).Fatal("GetMonsters")
+		}
+		log.WithFields(log.Fields{"monster": monster}).Info("GetMonsters")
+	}
+
+}
+
 func main() {
 	flag.Parse()
 	var opts []grpc.DialOption
@@ -49,4 +71,5 @@ func main() {
 	defer conn.Close()
 	client := pb.NewGameWorldClient(conn)
 	getRandomItem(client, &pb.ItemRequest{LoopNumber: 1, Level: 1})
+	getMonsters(client, &pb.MonsterRequest{LoopNumber: 1, Level: 1})
 }

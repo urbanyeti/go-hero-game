@@ -8,8 +8,8 @@ type Hero struct {
 func NewHero(id string, name string, desc string) *Hero {
 	h := Hero{NewCharacter(id, name, desc)}
 	h.setDefaultStats()
-	h.items = []*Item{}
-	h.equipment = Equipment{}
+	h.Items = []*Item{}
+	h.Equipment = Equipment{}
 
 	return &h
 }
@@ -17,7 +17,7 @@ func NewHero(id string, name string, desc string) *Hero {
 // SetDefaultStats initializes the default stats for the hero
 func (hero *Hero) setDefaultStats() {
 	hero.hp = 100
-	hero.stats = Stats{
+	hero.Stats = Stats{
 		"hp-max":   100,
 		"atk":      5,
 		"def":      5,

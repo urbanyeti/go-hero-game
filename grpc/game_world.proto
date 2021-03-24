@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+option go_package = "github.com/urbanyeti/go-hero-game/grpc";
+
+package gameworld;
+
+service GameWorld {
+	rpc GetRandomItem(ItemRequest) returns (Item) {}
+	rpc GetMonsters(MonsterRequest) returns (stream Monster) {}
+}
+
+message ItemRequest {
+	int32 loop_number = 1;
+	int32 level = 2;
+}
+
+message MonsterRequest {
+	int32 loop_number = 1;
+	int32 level = 2;
+}
+
+message Item {
+	string ID = 1;
+	string Name = 2;
+	string Desc = 3;
+	map<string,int32> Stats = 4;
+	map<string,bool> Tags = 5;
+}
+
+message Ability {
+	string ID = 1;
+	string Name = 2;
+	string Desc = 3;
+	map<string,int32> Stats = 4;
+	map<string,bool> Tags = 5;
+}
+
+message Monster {
+	string ID = 1;
+	string Name = 2;
+	string Desc = 3;
+	map<string,bool> Tags = 4;
+	int32 HP = 5;
+	map<string,Item> Equipment = 6;
+	map<string,Ability> Abilities = 7;
+	repeated Item Items = 8;
+	map<string,int32> Stats = 9;
+}
