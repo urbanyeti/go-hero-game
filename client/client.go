@@ -25,7 +25,8 @@ func getRandomItem(client pb.GameWorldClient, req *pb.ItemRequest) {
 	if err != nil {
 		log.WithFields(log.Fields{"client": client, "error": err}).Fatal("GetRandomItem")
 	}
-	log.Println(item)
+	i := pb.UnpackItem(item)
+	log.Println(i)
 }
 
 func main() {

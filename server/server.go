@@ -8,9 +8,8 @@ import (
 	"net"
 	"os"
 
-	"github.com/urbanyeti/go-hero-game/character"
 	"github.com/urbanyeti/go-hero-game/game"
-	server "github.com/urbanyeti/go-hero-game/server/grpc"
+	pb "github.com/urbanyeti/go-hero-game/server/grpc"
 	grpc "google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
@@ -23,7 +22,7 @@ var (
 )
 
 type gameWorldServer struct {
-	server.UnimplementedGameWorldServer
+	pb.UnimplementedGameWorldServer
 	g *game.Game
 }
 
@@ -32,24 +31,10 @@ func (s *gameWorldServer) Initialize() {
 	s.g.Initialize()
 }
 
-func (s *gameWorldServer) GetRandomItem(context.Context, *server.ItemRequest) (*server.Item, error) {
+func (s *gameWorldServer) GetRandomItem(context.Context, *pb.ItemRequest) (*pb.Item, error) {
 	item := s.g.Items.GetRandomItem()
 
-	return itemResponse(item), nil
-}
-
-func itemResponse(item *character.Item) *server.Item {
-	r := &server.Item{}
-	r.ID = item.ID()
-	r.Name = item.Name()
-	r.Desc = item.Desc()
-	r.Tags = item.Tags
-	r.Stats = make(map[string]int32, len(item.Stats))
-	for k, v := range item.Stats {
-		r.Stats[k] = int32(v)
-	}
-
-	return r
+	return pb.PackItem(item), nil
 }
 
 func newServer() *gameWorldServer {
@@ -77,6 +62,6 @@ func main() {
 		opts = []grpc.ServerOption{grpc.Creds(creds)}
 	}
 	grpcServer := grpc.NewServer(opts...)
-	server.RegisterGameWorldServer(grpcServer, newServer())
+	pb.RegisterGameWorldServer(grpcServer, newServer())
 	grpcServer.Serve(lis)
 }

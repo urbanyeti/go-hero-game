@@ -44,6 +44,15 @@ func (i ItemJSON) LoadItem() *Item {
 	}
 }
 
+// LoadItem generates an Item object from the DTO
+func CreateItem(id string, name string, desc string) *Item {
+	return &Item{
+		id:   id,
+		name: name,
+		desc: desc,
+	}
+}
+
 // ID returns item's ID
 func (i *Item) ID() string {
 	return i.id
