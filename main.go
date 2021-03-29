@@ -8,16 +8,12 @@ import (
 	"github.com/urbanyeti/go-hero-game/game"
 )
 
-const loopTurns int = 10
 const maxTurns int = 100
-const messageDelay = 0
-const turnDelay = 0
-const loopDelay = 0
 
 func setLogging() *os.File {
 	var filename string = "logfile.log"
 	// Create the log file if doesn't exist. And append to it if it already exists.
-	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0644)
 	Formatter := new(log.TextFormatter)
 
 	// You can change the Timestamp format. But you have to use the same date and time.

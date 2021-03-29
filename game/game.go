@@ -13,10 +13,9 @@ import (
 )
 
 const loopTurns int = 10
-const maxTurns int = 100
 const messageDelay = 0
-const turnDelay = 200
-const loopDelay = 1000
+const turnDelay = 0
+const loopDelay = 0
 
 // Game contains state and data about the game session
 type Game struct {
