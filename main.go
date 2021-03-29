@@ -14,7 +14,7 @@ const messageDelay = 0
 const turnDelay = 0
 const loopDelay = 0
 
-func setLogging() {
+func setLogging() *os.File {
 	var filename string = "logfile.log"
 	// Create the log file if doesn't exist. And append to it if it already exists.
 	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
@@ -32,10 +32,14 @@ func setLogging() {
 	} else {
 		log.SetOutput(f)
 	}
+
+	return f
+
 }
 
 func main() {
-	setLogging()
+	f := setLogging()
+	defer f.Close()
 	game := game.Game{}
 	game.Initialize()
 
