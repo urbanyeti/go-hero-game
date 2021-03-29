@@ -40,16 +40,7 @@ type Attack struct {
 
 // Start the fight
 func (encounter CombatEncounter) Start(game *Game) bool {
-	monsters := map[string]character.Monster{}
-	for _, c := range encounter.Monsters {
-		if c.Stat("lvl") > game.Loop {
-			continue
-		}
-		m := c.Clone()
-		m.AddStat("lvl", (game.Loop-1)*2)
-		monsters[fmt.Sprint(m.ID(), len(monsters))] = m
-	}
-
+	monsters := getEncounter(game, encounter)
 	log.WithFields(log.Fields{"hero": game.Hero, "monsters": monsters}).Info("combat started")
 	keys := make([]string, 0, len(monsters))
 	for key := range monsters {
@@ -107,6 +98,33 @@ func (encounter CombatEncounter) Start(game *Game) bool {
 		}
 		time.Sleep(messageDelay * time.Millisecond)
 	}
+}
+
+func getEncounter(game *Game, encounter CombatEncounter) map[string]character.Monster {
+	monsters := map[string]character.Monster{}
+
+	// Get random assortment of monsters that equal hero's level
+	cr := game.Hero.Stat("lvl")
+	for cr > 0 {
+		m := encounter.getRandomMonster(cr).Clone()
+		m.AddStat("lvl", (game.Loop-1)*1)
+		cr -= m.Stat("lvl")
+		monsters[fmt.Sprint(m.ID(), len(monsters))] = m
+	}
+
+	return monsters
+}
+
+// Get a random level-appropriate monster
+func (e CombatEncounter) getRandomMonster(maxLvl int) *character.Monster {
+
+	ml := []character.Monster{}
+	for _, c := range e.Monsters {
+		if c.Stat("lvl") <= maxLvl {
+			ml = append(ml, c)
+		}
+	}
+	return &ml[rand.Intn(len(ml))]
 }
 
 func (a Attack) dealDamage() {
