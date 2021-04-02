@@ -12,7 +12,7 @@ const maxTurns int = 100
 
 func setLogging() *os.File {
 	var filename string = "logfile.log"
-	// Create the log file if doesn't exist. And append to it if it already exists.
+	// Create the log file if doesn't exist
 	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0644)
 	Formatter := new(log.TextFormatter)
 
