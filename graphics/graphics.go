@@ -12,11 +12,14 @@ import (
 )
 
 const (
-	SCREENWIDTH  = 500
-	SCREENHEIGHT = 370
-	HOLD         = 6
-	ATTACKPATH   = `Knight_02\03-Attack\`
-	WALKPATH     = `Knight_02\02-Walk\`
+	SCREENWIDTH      = 500
+	SCREENHEIGHT     = 370
+	HOLD             = 6
+	ATTACKPATH       = `Knight_02\03-Attack\`
+	WALKPATH         = `Knight_02\02-Walk\`
+	HERO_IDLE_PATH   = `Knight_02\01-Idle\`
+	GOBLIN_IDLE_PATH = `Goblin_02\01-Idle\`
+	GOBLIN_DIE_PATH  = `Goblin_02\07-Die\`
 )
 
 type Sprite struct {
@@ -40,13 +43,17 @@ type Animation struct {
 
 func (a *Animation) Play() *ebiten.Image {
 	if a.isDone {
-		return a.images[a.current/HOLD]
+		return a.images[len(a.images)-1]
 	}
 
 	a.current++
 	if (a.current / HOLD) >= len(a.images) {
-		a.current = 0
-		a.isDone = !a.isLoop
+		if a.isLoop {
+			a.current = 0
+		} else {
+			a.isDone = true
+			return a.images[len(a.images)-1]
+		}
 	}
 	return a.images[(a.current / HOLD)]
 }
@@ -60,19 +67,33 @@ type Game struct {
 	op     ebiten.DrawImageOptions
 	inited bool
 	a      *Animation
+	a2     *Animation
+	g      *Animation
+	g2     *Animation
 }
 
 func (g *Game) LoadContent() {
-	imgs, err := loadImageFolder(ATTACKPATH)
+	g.a = g.NewAnimation(ATTACKPATH, true)
+	g.a2 = g.NewAnimation(HERO_IDLE_PATH, true)
+	g.g = g.NewAnimation(GOBLIN_IDLE_PATH, true)
+	g.g.x += 150
+	g.g.flipped = true
+	g.g2 = g.NewAnimation(GOBLIN_DIE_PATH, false)
+	g.g2.x += 150
+	g.g2.flipped = true
+}
+
+func (g *Game) NewAnimation(folder string, isLoop bool) *Animation {
+	imgs, err := loadImageFolder(folder)
 	if err != nil {
 		log.Fatal(err)
 	}
 	w, h := imgs[0].Size()
 	w, h = w/4, h/4
 	x, y := (SCREENWIDTH-w)/3, (SCREENHEIGHT)/2
-	g.a = &Animation{
+	return &Animation{
 		images: imgs,
-		isLoop: true,
+		isLoop: isLoop,
 		Sprite: Sprite{
 			imageWidth:  w,
 			imageHeight: h,
@@ -80,6 +101,7 @@ func (g *Game) LoadContent() {
 			y:           y,
 		},
 	}
+
 }
 
 func loadImageFolder(folderName string) ([]*ebiten.Image, error) {
@@ -101,7 +123,11 @@ func loadImageFolder(folderName string) ([]*ebiten.Image, error) {
 }
 
 func (g *Game) Update(screen *ebiten.Image) error {
-	g.a.Update()
+	g.count++
+	if g.count == 100 {
+		g.g = g.g2
+		g.a = g.a2
+	}
 	return nil
 }
 
@@ -110,6 +136,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	g.op.GeoM.Scale(.25, .25)
 	g.op.GeoM.Translate(float64(g.a.x), float64(g.a.y))
 	screen.DrawImage(g.a.Play(), &g.op)
+
+	g.op.GeoM.Reset()
+	g.op.GeoM.Scale(-.25, .25)
+	g.op.GeoM.Translate(float64(g.g.imageWidth), 0)
+	g.op.GeoM.Translate(float64(g.g.x), float64(g.g.y))
+	screen.DrawImage(g.g.Play(), &g.op)
+
 	msg := fmt.Sprintf(`TPS: %0.2f
 FPS: %0.2f
 X: %v Y: %v`, ebiten.CurrentTPS(), ebiten.CurrentFPS(), g.a.x, g.a.y)
