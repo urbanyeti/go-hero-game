@@ -1,6 +1,8 @@
 # go-hero-game
 An adventure simulator written in Go
 
+<img src="/preview_1.png " width="300" >
+
 ## Packages
 
 ### character
