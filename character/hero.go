@@ -1,12 +1,17 @@
 package character
 
+import (
+	"github.com/urbanyeti/go-hero-game/graphics"
+)
+
 // The Hero is the main player character.
 type Hero struct {
 	Character
+	Animations *graphics.Animations
 }
 
-func NewHero(id string, name string, desc string) *Hero {
-	h := Hero{NewCharacter(id, name, desc)}
+func NewHero(id string, name string, desc string, animations *graphics.Animations) *Hero {
+	h := Hero{NewCharacter(id, name, desc), animations}
 	h.setDefaultStats()
 	h.Items = []*Item{}
 	h.Equipment = Equipment{}
@@ -40,4 +45,8 @@ func (hero *Hero) GainExp(exp int) {
 	} else {
 		hero.AddStat("exp", exp)
 	}
+}
+
+func (hero *Hero) GetAnimations() *graphics.Animations {
+	return hero.Animations
 }

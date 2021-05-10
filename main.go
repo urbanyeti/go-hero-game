@@ -34,11 +34,15 @@ func setLogging() *os.File {
 }
 
 func main() {
-	f := setLogging()
-	defer f.Close()
+	//f := setLogging()
+	//defer f.Close()
 	game := game.Game{}
 	game.Initialize()
+	go PlayGame(game)
+	game.Graphics.Run()
+}
 
+func PlayGame(game game.Game) {
 	for i := 0; i < maxTurns; i++ {
 		gameOver := game.PlayTurn()
 		if gameOver {

@@ -8,6 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/urbanyeti/go-hero-game/character"
+	"github.com/urbanyeti/go-hero-game/graphics"
 	"github.com/urbanyeti/go-hero-game/math"
 )
 
@@ -27,6 +28,7 @@ type Fighter interface {
 	Weapons() ([]*character.Item, bool)
 	TakeDamage(int)
 	SelectDamager() character.Damager
+	GetAnimations() *graphics.Animations
 }
 
 type Attack struct {
@@ -38,12 +40,18 @@ type Attack struct {
 	Spd      int
 }
 
+func SetAnimation(game *Game, name string, animations *graphics.Animations, action string, isLoop bool) {
+	(*game.Graphics.Animations)[name] = (*animations)[action].Clone(isLoop)
+}
+
 // Start the fight
 func (encounter CombatEncounter) Start(game *Game) bool {
+	SetAnimation(game, game.Hero.ID(), game.Hero.Animations, "01-Idle", true)
 	monsters := getEncounter(game, encounter)
 	log.WithFields(log.Fields{"hero": game.Hero, "monsters": monsters}).Info("combat started")
 	keys := make([]string, 0, len(monsters))
-	for key := range monsters {
+	for key, monster := range monsters {
+		SetAnimation(game, key, monster.Animations, "01-Idle", true)
 		keys = append(keys, key)
 	}
 
@@ -58,25 +66,33 @@ func (encounter CombatEncounter) Start(game *Game) bool {
 	}
 
 	for {
-		for _, a := range attacks {
+		for attackerID, a := range attacks {
 			a.Agi += a.Attacker.Agi()
 			if a.Agi >= a.Spd {
 				// Execute attack
+				SetAnimation(game, attackerID, a.Attacker.GetAnimations(), "03-Attack", true)
+				time.Sleep(attackDelay * time.Millisecond)
 				r := rand.Float64()
 				if r < (float64(a.Target.Eva()) / 100) {
 					// Target evades attack
 					log.WithFields(log.Fields{"attack": a}).Info("attack evaded")
+					SetAnimation(game, attackerID, a.Attacker.GetAnimations(), "01-Idle", true)
 					continue
 				}
-
+				SetAnimation(game, a.TargetID, a.Target.GetAnimations(), "07-Hurt", true)
 				a.dealDamage()
+				time.Sleep(attackDelay * time.Millisecond)
+
 				if a.Target.HP() <= 0 {
 					if _, isHero := a.Target.(*character.Hero); isHero {
 						log.WithFields(log.Fields{"hero": game.Hero}).Info("hero died")
+						SetAnimation(game, game.Hero.ID(), game.Hero.Animations, "08-Die", false)
 						return true
 					}
 
 					log.WithFields(log.Fields{"hero": game.Hero.ID(), "monster": a.Target.ID()}).Info("monster slain")
+					SetAnimation(game, a.TargetID, a.Target.GetAnimations(), "08-Die", false)
+					time.Sleep(attackDelay * time.Millisecond)
 					game.Hero.GainExp(a.Target.Stat("exp"))
 					game.Hero.AddItem(game.Items.GetRandomItem())
 					delete(monsters, a.TargetID)
@@ -88,12 +104,15 @@ func (encounter CombatEncounter) Start(game *Game) bool {
 					}
 
 					log.WithFields(log.Fields{"hero": game.Hero.ID()}).Info("combat finished")
+					SetAnimation(game, game.Hero.ID(), game.Hero.Animations, "02-Walk", true)
 					return false
 				}
 				damager = a.Attacker.SelectDamager()
 				a.Agi = 0
 				a.Damager = damager
 				a.Spd = damager.Stat("spd")
+				SetAnimation(game, attackerID, a.Attacker.GetAnimations(), "01-Idle", true)
+				SetAnimation(game, a.TargetID, a.Target.GetAnimations(), "01-Idle", true)
 			}
 		}
 		time.Sleep(messageDelay * time.Millisecond)

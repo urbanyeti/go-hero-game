@@ -1,11 +1,14 @@
 package character
 
+import "github.com/urbanyeti/go-hero-game/graphics"
+
 // Monster is an agent in the world
 type Monster struct {
 	Character
+	Animations *graphics.Animations
 }
 
-func (c CharacterJSON) LoadMonster(la map[string]Ability, li map[string]*Item) Monster {
+func (c CharacterJSON) LoadMonster(la map[string]Ability, li map[string]*Item, animations *graphics.Animations) Monster {
 	// Add values of loaded abilities to monster
 	abilities := make(Abilities)
 	for _, a := range c.Abilities {
@@ -35,7 +38,7 @@ func (c CharacterJSON) LoadMonster(la map[string]Ability, li map[string]*Item) M
 		Items:     items,
 		Abilities: abilities,
 		Equipment: Equipment{},
-	}}
+	}, animations}
 
 	monster.Equip(items...)
 
@@ -56,8 +59,18 @@ func (m Monster) Clone() Monster {
 	for k, v := range m.Equipment {
 		n.Equipment[k] = v
 	}
+	anims := graphics.Animations{}
+	for k, v := range *m.Animations {
+		anims[k] = v
+	}
+	n.Animations = &anims
+
 	n.Items = make([]*Item, len(m.Items))
 	copy(n.Items, m.Items)
 
 	return n
+}
+
+func (m *Monster) GetAnimations() *graphics.Animations {
+	return m.Animations
 }

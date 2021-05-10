@@ -1,14 +1,14 @@
-package main
+package graphics
 
 import (
 	"fmt"
 	"image"
 	"io/ioutil"
-	"log"
 	"os"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/ebitenutil"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -25,13 +25,14 @@ const (
 type Sprite struct {
 	imageWidth  int
 	imageHeight int
-	x           int
-	y           int
+	X           int
+	Y           int
 	vx          int
 	vy          int
-	hold        int
-	flipped     bool
+	Flipped     bool
 }
+
+type Animations map[string]*Animation
 
 type Animation struct {
 	Sprite
@@ -39,6 +40,15 @@ type Animation struct {
 	images  []*ebiten.Image
 	isDone  bool
 	isLoop  bool
+}
+
+func (a *Animation) Clone(isLoop bool) *Animation {
+	n := Animation{}
+	n.images = a.images
+	n.isLoop = isLoop
+	n.Sprite = a.Sprite
+
+	return &n
 }
 
 func (a *Animation) Play() *ebiten.Image {
@@ -62,28 +72,20 @@ func (s *Sprite) Update() {
 
 }
 
-type Game struct {
-	count  int
-	op     ebiten.DrawImageOptions
-	inited bool
-	a      *Animation
-	a2     *Animation
-	g      *Animation
-	g2     *Animation
+type Graphics struct {
+	count      int
+	op         ebiten.DrawImageOptions
+	inited     bool
+	Animations *Animations
 }
 
-func (g *Game) LoadContent() {
-	g.a = g.NewAnimation(ATTACKPATH, true)
-	g.a2 = g.NewAnimation(HERO_IDLE_PATH, true)
-	g.g = g.NewAnimation(GOBLIN_IDLE_PATH, true)
-	g.g.x += 150
-	g.g.flipped = true
-	g.g2 = g.NewAnimation(GOBLIN_DIE_PATH, false)
-	g.g2.x += 150
-	g.g2.flipped = true
+func NewGraphics() *Graphics {
+	g := &Graphics{}
+	g.Animations = &Animations{}
+	return g
 }
 
-func (g *Game) NewAnimation(folder string, isLoop bool) *Animation {
+func NewAnimation(folder string, isEnemy bool) *Animation {
 	imgs, err := loadImageFolder(folder)
 	if err != nil {
 		log.Fatal(err)
@@ -91,17 +93,19 @@ func (g *Game) NewAnimation(folder string, isLoop bool) *Animation {
 	w, h := imgs[0].Size()
 	w, h = w/4, h/4
 	x, y := (SCREENWIDTH-w)/3, (SCREENHEIGHT)/2
+	if isEnemy {
+		x += 200
+	}
 	return &Animation{
 		images: imgs,
-		isLoop: isLoop,
 		Sprite: Sprite{
 			imageWidth:  w,
 			imageHeight: h,
-			x:           x,
-			y:           y,
+			X:           x,
+			Y:           y,
+			Flipped:     isEnemy,
 		},
 	}
-
 }
 
 func loadImageFolder(folderName string) ([]*ebiten.Image, error) {
@@ -116,49 +120,48 @@ func loadImageFolder(folderName string) ([]*ebiten.Image, error) {
 			return nil, err
 		}
 		img, _, err := image.Decode(f)
+		if err != nil {
+			log.Warn(err)
+			continue
+		}
 		ebitenImage, _ := ebiten.NewImageFromImage(img, ebiten.FilterDefault)
 		imgs = append(imgs, ebitenImage)
 	}
 	return imgs, nil
 }
 
-func (g *Game) Update(screen *ebiten.Image) error {
+func (g *Graphics) Update(screen *ebiten.Image) error {
 	g.count++
-	if g.count == 100 {
-		g.g = g.g2
-		g.a = g.a2
-	}
+
 	return nil
 }
 
-func (g *Game) Draw(screen *ebiten.Image) {
-	g.op.GeoM.Reset()
-	g.op.GeoM.Scale(.25, .25)
-	g.op.GeoM.Translate(float64(g.a.x), float64(g.a.y))
-	screen.DrawImage(g.a.Play(), &g.op)
-
-	g.op.GeoM.Reset()
-	g.op.GeoM.Scale(-.25, .25)
-	g.op.GeoM.Translate(float64(g.g.imageWidth), 0)
-	g.op.GeoM.Translate(float64(g.g.x), float64(g.g.y))
-	screen.DrawImage(g.g.Play(), &g.op)
+func (g *Graphics) Draw(screen *ebiten.Image) {
+	for _, a := range *g.Animations {
+		g.op.GeoM.Reset()
+		if a.Flipped {
+			g.op.GeoM.Scale(-.25, .25)
+			g.op.GeoM.Translate(float64(a.imageWidth), 0)
+		} else {
+			g.op.GeoM.Scale(.25, .25)
+		}
+		g.op.GeoM.Translate(float64(a.X), float64(a.Y))
+		screen.DrawImage(a.Play(), &g.op)
+	}
 
 	msg := fmt.Sprintf(`TPS: %0.2f
-FPS: %0.2f
-X: %v Y: %v`, ebiten.CurrentTPS(), ebiten.CurrentFPS(), g.a.x, g.a.y)
+FPS: %0.2f`, ebiten.CurrentTPS(), ebiten.CurrentFPS())
 	ebitenutil.DebugPrint(screen, msg)
 }
 
-func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
+func (g *Graphics) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return SCREENWIDTH, SCREENHEIGHT
 }
 
-func main() {
+func (g *Graphics) Run() {
 	ebiten.SetWindowSize(SCREENWIDTH*2, SCREENHEIGHT*2)
-	ebiten.SetWindowTitle("Game")
-	game := Game{}
-	game.LoadContent()
-	if err := ebiten.RunGame(&game); err != nil {
+	ebiten.SetWindowTitle("go-hero-game")
+	if err := ebiten.RunGame(g); err != nil {
 		log.Fatal(err)
 	}
 }
