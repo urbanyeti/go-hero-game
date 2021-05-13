@@ -46,6 +46,7 @@ func SetAnimation(game *Game, name string, animations *graphics.Animations, acti
 
 // Start the fight
 func (encounter CombatEncounter) Start(game *Game) bool {
+	game.Graphics.Animations = &graphics.Animations{}
 	SetAnimation(game, game.Hero.ID(), game.Hero.Animations, "01-Idle", true)
 	monsters := getEncounter(game, encounter)
 	log.WithFields(log.Fields{"hero": game.Hero, "monsters": monsters}).Info("combat started")

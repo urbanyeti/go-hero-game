@@ -16,7 +16,7 @@ import (
 const loopTurns int = 10
 const messageDelay = 100
 const attackDelay = 500
-const turnDelay = 300
+const turnDelay = 1000
 const loopDelay = 0
 const GRAPHICS_PATH = `graphics/content/`
 
